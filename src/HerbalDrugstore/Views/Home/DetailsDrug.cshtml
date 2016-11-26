@@ -1,0 +1,46 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model HerbalDrugstore.Models.DrugAndHerbViewModel
+
+@{
+    ViewData["Title"] = "DetailsDrug";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Drug details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dd></dd>
+        <dt>@Html.DisplayNameFor(model => model.Drug.Name)</dt>
+        <dd>@Html.DisplayFor(model => model.Drug.Name)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Drug.Indications)</dt>
+        <dd>@Html.DisplayFor(model => model.Drug.Indications)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Drug.Instruction)</dt>
+        <dd>@Html.DisplayFor(model => model.Drug.Instruction)</dd>
+        <dt>@Html.DisplayNameFor(model => model.Drug.Quantity)</dt>
+        <dd>@Html.DisplayFor(model => model.Drug.Quantity)</dd>
+        <dt>Compound</dt>
+
+        @if (Model.Compound.Count != 0)
+        {
+            @foreach (var component in Model.Compound)
+             {
+                 <dt>Растение</dt>
+                 <dd>@component.Herb.Name</dd>
+                 <dt>Количество</dt>
+                 <dd>@component.Quantity</dd>
+             }
+        }
+        else
+        {
+            <dd>empty</dd>
+        }
+
+
+    </dl>
+</div>
+<div>
+    @Html.ActionLink("Edit", "EditDrug", new {  id = Model.Drug.DrugId }) |
+    <a asp-action="DrugsList">Back to List</a>
+</div>

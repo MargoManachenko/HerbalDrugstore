@@ -53,9 +53,6 @@ namespace HerbalDrugstore
 
             services.AddMvc();
 
-            // Add application services.
-            //services.AddTransient<IEmailSender, AuthMessageSender>();
-            //services.AddTransient<ISmsSender, AuthMessageSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -81,7 +78,6 @@ namespace HerbalDrugstore
 
             app.UseStaticFiles();
 
-           // app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 

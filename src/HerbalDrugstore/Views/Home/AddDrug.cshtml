@@ -1,0 +1,124 @@
+@model HerbalDrugstore.Models.DrugAndHerbViewModel
+
+@{
+    ViewData["Title"] = "AddDrug";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script language="javascript" type="text/javascript">
+
+        function addRow() {
+
+            var index = $("#space").children("tr").length;
+            var indexCell = "<input name='Baggage.Index'  type='hidden' value='" + index + "' />";
+            var typeCell = "<input class='styleOfInput' id='Type" + index + "' name='TBoxes' type='text' value='' />";
+            var removeCell = "<a id='btnAddBag'  class='glyphicon glyphicon-trash' type='button' onclick='removeRow(" + index + ");' />";
+
+            var newRow = "<div class='form-group'><div class='col-md-10'>" +
+                "<div id='herb" + index + "' >" + indexCell + typeCell + removeCell +
+                "</div></div></div>";
+
+            $("#space").append(newRow);
+        }
+
+        function removeRow(id) {
+            var controlToBeRemoved = "#herb" + id;
+            $(controlToBeRemoved).remove();
+        }
+
+    </script>
+
+
+</head>
+
+<h2>AddDrug</h2>
+
+<form asp-action="AddDrug">
+    <div class="form-horizontal">
+        <h4>DrugAndHerbViewModel</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Drug.Name" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Drug.Name" class="form-control" />
+                <span asp-validation-for="Drug.Name" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Drug.Indications" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Drug.Indications" class="form-control" />
+                <span asp-validation-for="Drug.Indications" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Drug.Instruction" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Drug.Instruction" class="form-control" />
+                <span asp-validation-for="Drug.Instruction" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Drug.Quantity" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Drug.Quantity" class="form-control" />
+                <span asp-validation-for="Drug.Quantity" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input type="text" name="TBoxes" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-10">
+                <label class="col-md-2 control-label"></label>
+                <button id="btnAddBag" type="button"
+                        onclick="addRow();" class="btn btn-default">+</button>
+                <div id="space"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<style>
+    #space {
+        margin: 10px;
+        padding: 10px;
+        margin-left: 250px;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+
+    .styleOfInput {
+        display: block;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        max-width: 280px;
+        margin-left: -65px;
+    }
+</style>

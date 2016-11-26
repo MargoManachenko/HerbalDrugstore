@@ -1,0 +1,71 @@
+@using HerbalDrugstore.Models
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model HerbalDrugstore.Models.DrugAndHerbViewModel
+
+@{
+    ViewData["Title"] = "EditDrug";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit Drug</h2>
+
+<form asp-action="ApplyEditDrug">
+    <div class="form-horizontal">
+        <h4>DrugAndHerbViewModel</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Drug.DrugId" />
+        <div class="form-group">
+            <label asp-for="Drug.Name" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Drug.Name" class="form-control"/>
+                <span asp-validation-for="Drug.Name" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Drug.Indications" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Drug.Indications" class="form-control"/>
+                <span asp-validation-for="Drug.Indications" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Drug.Instruction" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Drug.Instruction" class="form-control"/>
+                <span asp-validation-for="Drug.Instruction" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Drug.Quantity" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Drug.Quantity" class="form-control"/>
+                <span asp-validation-for="Drug.Quantity" class="text-danger" />
+            </div>
+        </div>
+
+        @if (Model.Compound.Count != 0)
+        {
+            foreach (var compound in Model.Compound)
+            {
+                <div class="form-group">
+                    <label class="col-md-2 control-label">1</label>
+                    <div class="col-md-10">
+                        <input type="text" name="TBoxes" class="form-control" value="@compound.Herb.Name" />
+                    </div>
+                </div>
+            }
+        }
+         
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="DrugsList">Back to List</a>
+</div>
+
