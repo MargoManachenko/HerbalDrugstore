@@ -1,0 +1,37 @@
+@model HerbalDrugstore.Models.Herb
+
+@{
+    ViewData["Title"] = "SearchHerb";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>SearchHerb</h2>
+
+<div>
+    <h4>Herb</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Species)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Species)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="EditHerb" asp-route-id="@Model.HerbId">Edit</a> |
+    <a asp-action="HerbsList">Back to List</a>
+</div>

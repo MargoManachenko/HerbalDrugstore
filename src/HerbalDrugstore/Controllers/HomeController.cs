@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HerbalDrugstore.Data;
 using HerbalDrugstore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HerbalDrugstore.Controllers
 {
@@ -27,6 +28,13 @@ namespace HerbalDrugstore.Controllers
             return View(_db.Herb.ToList());
         }
 
+        [HttpGet]
+        public IActionResult AddHerb()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public IActionResult AddHerb(Herb herb)
         {
             if (ModelState.IsValid)
@@ -66,14 +74,32 @@ namespace HerbalDrugstore.Controllers
             return View(_db.Drug.ToList());
         }
 
-        [HttpGet]
         public IActionResult AddDrug()
         {
             return View();
         }
 
+        public IActionResult SearchHerb(string nameToSearch)
+        {
 
-        //think
+            if (!string.IsNullOrEmpty(nameToSearch))
+            {
+                foreach (var herb in _db.Herb)
+                {
+                    if (herb.Name.ToLower() == nameToSearch.ToLower().Trim())
+                    {
+                        return View(herb);
+                    }
+                }
+            }
+            return RedirectToAction("HerbsList", "Home");
+        }
+
+        //public IActionResult FilterHerbs(int value)
+        //{
+            
+        //}
+
         [HttpPost]
         public IActionResult AddDrug(DrugAndHerbViewModel drugAndHerbs, IEnumerable<string> TBoxes)
         {
@@ -85,23 +111,33 @@ namespace HerbalDrugstore.Controllers
                 {
                     var herb = new Herb { Name = str.Trim(), Description = "", Species = "" };
                     herbsList.Add(herb);
-                    _db.Herb.Add(herb);
+
+                    if (_db.Herb.FirstOrDefault(h => string.Equals(h.Name, herb.Name, StringComparison.CurrentCultureIgnoreCase)) == null)
+                    {
+                        _db.Herb.Add(herb);
+                    }
                 }
             }
 
             var drugToAdd = drugAndHerbs.Drug;
-
             _db.Drug.Add(drugToAdd);
 
             _db.SaveChanges();
 
-            var drug = _db.Drug.OrderBy(d => d.DrugId).LastOrDefault();
+            var drugToC = _db.Drug.OrderBy(d => d.DrugId).LastOrDefault();
 
-            if (herbsList.Count != 0)
+            var herbsToC = new List<Herb>();
+
+            foreach (var h in herbsList)
             {
-                foreach (var herb in herbsList)
+                herbsToC.Add(_db.Herb.Single(p => p.Name == h.Name));
+            }
+
+            if (herbsToC.Count != 0)
+            {
+                foreach (var herb in herbsToC)
                 {
-                    var compound = new Compound() { Drug = drug, Herb = herb, DrugId = drug.DrugId, HerbId = herb.HerbId };
+                    var compound = new Compound() { Drug = drugToC, Herb = herb, DrugId = drugToC.DrugId, HerbId = herb.HerbId };
                     _db.Compound.Add(compound);
                 }
             }
@@ -113,20 +149,10 @@ namespace HerbalDrugstore.Controllers
 
         public IActionResult DetailsDrug(int id)
         {
-            
+
             var drug = _db.Drug.Single(d => d.DrugId == id);
 
-            var compound = _db.Compound.Where(c => c.DrugId == id).ToList();
-
-            //var comp = new List<Compound>();
-
-            //foreach (var v in _db.Compound.ToList())
-            //{
-            //    if (v.DrugId == id)
-            //    {
-            //        comp.Add(v);
-            //    }
-            //}
+            var compound = _db.Compound.Include(c => c.Herb).Include(c => c.Drug).Where(c => c.DrugId == id).ToList();
 
             var model = new DrugAndHerbViewModel { Compound = compound, Drug = drug };
 
@@ -167,11 +193,11 @@ namespace HerbalDrugstore.Controllers
             {
                 if (!string.IsNullOrEmpty(herb))
                 {
-                    
+
                 }
             }
 
-                _db.SaveChanges();
+            _db.SaveChanges();
 
             return RedirectToAction("DrugsList", "Home");
         }

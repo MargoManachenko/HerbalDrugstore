@@ -6,6 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <h2>Drug details</h2>
 
 <div>
@@ -20,15 +21,15 @@
         <dd>@Html.DisplayFor(model => model.Drug.Instruction)</dd>
         <dt>@Html.DisplayNameFor(model => model.Drug.Quantity)</dt>
         <dd>@Html.DisplayFor(model => model.Drug.Quantity)</dd>
-        <dt>Compound</dt>
+        <dt>Compound</dt><dd></dd>
 
         @if (Model.Compound.Count != 0)
         {
             @foreach (var component in Model.Compound)
              {
-                 <dt>Растение</dt>
+                 <dt>Herb</dt>
                  <dd>@component.Herb.Name</dd>
-                 <dt>Количество</dt>
+                 <dt>Quantity</dt>
                  <dd>@component.Quantity</dd>
              }
         }
