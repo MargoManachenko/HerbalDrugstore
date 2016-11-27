@@ -95,10 +95,21 @@ namespace HerbalDrugstore.Controllers
             return RedirectToAction("HerbsList", "Home");
         }
 
-        //public IActionResult FilterHerbs(int value)
-        //{
-            
-        //}
+        public IActionResult FilterHerbs(int value)
+        {
+            if (value == 1)
+            {
+                var sortedByName = _db.Herb.OrderBy(h => h.Name).ToList();
+                return View(sortedByName);
+            }
+            if (value == 2)
+            {
+                var sortedBySpecies = _db.Herb.OrderBy(h => h.Species == "").ThenBy(h => h.Species).ToList();
+                return View(sortedBySpecies);
+            }
+
+            return RedirectToAction("HerbsList", "Home");
+        }
 
         [HttpPost]
         public IActionResult AddDrug(DrugAndHerbViewModel drugAndHerbs, IEnumerable<string> TBoxes)

@@ -6,6 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <h2>HerbsList</h2>
 
 <div class="row">
@@ -26,11 +27,12 @@
                                     <div>
                                         <label for="filter">Filter by</label>
                                     </div>
-                                    <select class="form-control">
+                                    <select class="form-control" name="value">
                                         <option value="0" selected="">Default</option>
                                         <option value="1">Alphabetically by name</option>
                                         <option value="2">Alphabetically by species</option>
                                     </select>
+                                    <input type="hidden" id="hfFruitName" name="FruitName" />
                                     <input type="submit" class="btn btn-default" value="Filter" >
                                 </div>
                                 <div class="form-group">
