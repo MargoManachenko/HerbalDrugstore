@@ -1,0 +1,35 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model HerbalDrugstore.Models.SupplyAndLotViewModel
+
+@{
+    ViewData["Title"] = "AddSupplyStep4";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>AddSupplyStep4</h2>
+
+<form asp-action="AddSupplyStep4" asp-route-id="@ViewBag.Id">
+    <div class="form-horizontal">
+        <h4>SupplyAndLotViewModel</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Date</label>
+            <div class="col-md-10">
+                <input type="date" name="date" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Price</label>
+            <div class="col-md-10">
+                <input type="number" step="0.01" name="price" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Finish" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+

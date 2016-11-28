@@ -364,7 +364,7 @@ namespace HerbalDrugstore.Controllers
 
             if (command.Equals("Finish"))
             {
-                return RedirectToAction("AddSupplyStep4", "Home");
+                return RedirectToAction("AddSupplyStep4", "Home", new {id = supply.SupplyId});
             }
             var supplier = _db.Supplier.OrderByDescending(s => s.SupplierId).FirstOrDefault();
 
@@ -372,10 +372,26 @@ namespace HerbalDrugstore.Controllers
             return RedirectToAction("AddSupplyStep2", "Home", new { supplierId = supplier.SupplierId, repeat = true });
         }
 
-        //public IActionResult AddSupplyStep4()
-        //{
-            
-        //}
+        [HttpGet]
+        public IActionResult AddSupplyStep4(int id)
+        {
+            ViewBag.Id = id;
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddSupplyStep4(float price, DateTime date, int id)
+        {
+            var supply = _db.Supply.Single(s => s.SupplyId == id);
+            supply.Price = price;
+            supply.DateOfSupply = date;
+
+            _db.Supply.Update(supply);
+            _db.SaveChanges();
+
+            return RedirectToAction("SuppliesList","Home");
+        }
 
 
         public IActionResult DeleteSupply(int id)
