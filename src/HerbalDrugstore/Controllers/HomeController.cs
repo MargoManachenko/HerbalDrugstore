@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using HerbalDrugstore.Data;
 using HerbalDrugstore.Models;
@@ -24,8 +25,12 @@ namespace HerbalDrugstore.Controllers
             return View();
         }
 
-        public IActionResult HerbsList()
+        public IActionResult HerbsList(string notFoundMessage, List<int> foundIds, string searchString)
         {
+            ViewBag.NotForundMessage = notFoundMessage;
+            ViewBag.FoundIds = foundIds;
+            ViewBag.SearchString = searchString;
+
             return View(_db.Herb.ToList());
         }
 
@@ -85,14 +90,29 @@ namespace HerbalDrugstore.Controllers
 
             if (!string.IsNullOrEmpty(nameToSearch))
             {
+                var ids = new List<int>();
+
                 foreach (var herb in _db.Herb)
                 {
-                    if (herb.Name.ToLower() == nameToSearch.ToLower().Trim())
+                    if (herb.Name.ToLower().Contains(nameToSearch.ToLower().Trim()))
                     {
-                        return View(herb);
+                        ids.Add(herb.HerbId);
                     }
                 }
+
+                if (ids.Count == 0)
+                {
+                    ViewBag.Message = "No matches for ' " + nameToSearch + " '";
+                    return RedirectToAction("HerbsList", "Home", new { notFoundMessage = ViewBag.Message });
+                }
+
+                ViewBag.FoundIds = ids;
+                ViewBag.SearchString = nameToSearch;
+
+                return RedirectToAction("HerbsList", "Home", new { notFoundMessage = "", foundIds = ViewBag.FoundIds, searchString = ViewBag.SearchString });
+
             }
+
             return RedirectToAction("HerbsList", "Home");
         }
 
@@ -109,7 +129,7 @@ namespace HerbalDrugstore.Controllers
                 {
                     var sortedBySpecies = _db.Herb.OrderBy(h => h.Species == "").ThenBy(h => h.Species).ToList();
                     return View(sortedBySpecies);
-                    }
+                }
 
                 return RedirectToAction("HerbsList", "Home");
             }
@@ -241,6 +261,70 @@ namespace HerbalDrugstore.Controllers
             _db.Drug.Remove(drugToDelete);
             _db.SaveChanges();
             return RedirectToAction("DrugsList", "Home");
+        }
+
+
+        public IActionResult SuppliersList()
+        {
+            return View(_db.Supplier.ToList());
+        }
+
+        [HttpGet]
+        public IActionResult AddSupplier()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult AddSupplier(Supplier supplier)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Supplier.Add(supplier);
+                _db.SaveChanges();
+            }
+            return RedirectToAction("SuppliersList", "Home");
+        }
+
+        public IActionResult EditSupplier(int id)
+        {
+            var supplier = _db.Supplier.Single(s => s.SupplierId == id);
+            return View(supplier);
+        }
+
+        public IActionResult ApplyEditSupplier(Supplier supplier)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Supplier.Update(supplier);
+                _db.SaveChanges();
+            }
+            return RedirectToAction("SuppliersList", "Home");
+        }
+
+        public IActionResult DeleteSupplier(int id)
+        {
+            var supplierToDelete = _db.Supplier.Single(h => h.SupplierId == id);
+            _db.Supplier.Remove(supplierToDelete);
+            _db.SaveChanges();
+            return RedirectToAction("SuppliersList", "Home");
+        }
+
+        public IActionResult SuppliesList()
+        {
+            
+            return View(_db.Supply.ToList());
+        }
+
+        public IActionResult AddSupply()
+        {
+            return View();
+        }
+
+        public IActionResult AddSupply(SupplyAndLotViewModel model)
+        {
+            return RedirectToAction("SuppliesList", "Home");
         }
 
         public IActionResult About()

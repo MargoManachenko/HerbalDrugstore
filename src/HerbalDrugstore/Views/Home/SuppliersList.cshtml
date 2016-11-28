@@ -1,0 +1,54 @@
+@model IEnumerable<HerbalDrugstore.Models.Supplier>
+
+@{
+    ViewData["Title"] = "SuppliersList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Suppliers List</h2>
+
+<p>
+    <a asp-action="AddSupplier" class="btn btn-default">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ContactName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Country)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Phone)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ContactName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phone)
+            </td>
+            <td>
+                <a asp-action="EditSupplier" asp-route-id="@item.SupplierId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SupplierId">Details(no)</a> |
+                <a asp-action="DeleteSupplier" asp-route-id="@item.SupplierId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

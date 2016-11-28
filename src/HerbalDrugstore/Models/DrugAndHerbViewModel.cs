@@ -8,10 +8,8 @@ namespace HerbalDrugstore.Models
 {
     public class DrugAndHerbViewModel
     {
-        [Required]
         public Drug Drug { get; set; }
 
-        [Required]
         public List<Compound> Compound { get; set; }
     }
 }
