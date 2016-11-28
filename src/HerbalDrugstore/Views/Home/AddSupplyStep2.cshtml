@@ -1,0 +1,80 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model HerbalDrugstore.Models.SupplyAndLotViewModel
+
+@{
+    ViewData["Title"] = "AddSupplyStep2";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>Add Supply</h2>
+
+<h3>Step 2. Add lots.</h3>
+
+<form asp-action="AddSupplyStep3">
+    <div class="form-horizontal">
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-horizontal">
+            <label class="col-md-2 control-label">Drug</label>
+            <select class="form-control" name="drugId">
+                @foreach (var drug in Model.Drugs)
+                {
+                    <option value="@drug.DrugId">@drug.Name</option>
+                }
+            </select>
+        </div>
+        <br/>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Quanyity</label>
+            <div class="col-md-10">
+                <input type="number" name="quantity" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Price</label>
+            <div class="col-md-10">
+                <input type="number" step="0.01" name="price" class="form-control"/>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" name="command" value="Next drug" class="btn btn-default" />
+                <input type="submit" name="command" value="Finish" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<style>
+    #space {
+        margin: 10px;
+        padding: 10px;
+        margin-left: 250px;
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+
+    .styleOfInput {
+        display: block;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        max-width: 280px;
+        margin-left: -65px;
+    }
+</style>

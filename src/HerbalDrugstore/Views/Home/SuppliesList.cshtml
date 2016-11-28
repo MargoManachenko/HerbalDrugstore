@@ -1,0 +1,63 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model IEnumerable<HerbalDrugstore.Models.Supply>
+
+@{
+    ViewData["Title"] = "SuppliesList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Supplies List</h2>
+
+<p>
+    <a asp-action="AddSupplyStep1" class="btn btn-default">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplyId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateOfSupply)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Supplier.CompanyName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Supplier.Country)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SupplyId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfSupply)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Supplier.CompanyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Supplier.Country)
+                </td>
+
+                <td>
+                    <a asp-action="EditSupply" asp-route-id="@item.SupplyId">Edit</a> |
+                    <a asp-action="SupplyDetails" asp-route-id="@item.SupplyId">Details</a> |
+                    <a asp-action="DeleteSupply" asp-route-id="@item.SupplyId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

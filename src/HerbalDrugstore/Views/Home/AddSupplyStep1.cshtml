@@ -1,0 +1,31 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model IEnumerable<Supplier>
+
+@{
+    ViewData["Title"] = "AddSupply";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Add Supply</h2>
+
+<h3>Step 1. Choose supplier.</h3>
+
+<form asp-action="AddSupplyStep2">
+    <div class="form-horizontal">
+        <select class="form-control" name="supplierId">
+            @foreach (var item in Model)
+            {
+                <option value="@item.SupplierId">@item.CompanyName</option>
+            }
+
+        </select>
+        <br/>
+        <input type="submit" class="btn btn-default"value="Next"/>
+
+    </div>
+</form>
+<br/>
+<div>
+    <a asp-action="SuppliesList">Back to List</a>
+</div>
+

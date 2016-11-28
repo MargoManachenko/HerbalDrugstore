@@ -20,11 +20,9 @@ namespace HerbalDrugstore.Models
         [Required]
         public int SupplierId { get; set; }
 
-        [Required]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateOfSupply { get; set; }
 
-        [Required]
         [DataType(DataType.Currency)]
         public float Price { get; set; }
     }

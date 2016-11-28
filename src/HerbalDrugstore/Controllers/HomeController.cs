@@ -313,17 +313,86 @@ namespace HerbalDrugstore.Controllers
 
         public IActionResult SuppliesList()
         {
+
+            return View(_db.Supply.Include(p => p.Supplier).ToList());
+        }
+
+        [HttpGet]
+        public IActionResult AddSupplyStep1()
+        {
+            return View(_db.Supplier.ToList());
+        }
+
+        //добавляем поставку в бд, передаем список препаратов
+        public IActionResult AddSupplyStep2(int supplierId, bool repeat)
+        {
+            var supplier = _db.Supplier.Single(s => s.SupplierId == supplierId);
+            var drugs = _db.Drug.ToList();
+            var supply = new Supply() { SupplierId = supplierId, Supplier = supplier };
+
+            if (!repeat)
+            {
+                _db.Supply.Add(supply);
+                _db.SaveChanges();
+            }
+
+            var supplyToPass = _db.Supply.OrderByDescending(s => s.SupplyId).FirstOrDefault();
+
+            var model = new SupplyAndLotViewModel() { Supplier = supplier, Drugs = drugs, Supply = supplyToPass };
+
+            return View(model);
+        }
+
+
+        public IActionResult AddSupplyStep3(int drugId, int quantity, float price, string command)
+        {
+            var drug = _db.Drug.Single(d => d.DrugId == drugId);
+            var supply = _db.Supply.OrderByDescending(s => s.SupplyId).FirstOrDefault();
+
+            var lot = new Lot()
+            {
+                DrugId = drug.DrugId,
+                Grug = drug,
+                Quantity = quantity,
+                Price = price,
+                Supply = supply,
+                SupplyId = supply.SupplyId
+            };
+
+            _db.Lot.Add(lot);
+            _db.SaveChanges();
+
+            if (command.Equals("Finish"))
+            {
+                return RedirectToAction("AddSupplyStep4", "Home");
+            }
+            var supplier = _db.Supplier.OrderByDescending(s => s.SupplierId).FirstOrDefault();
+
+
+            return RedirectToAction("AddSupplyStep2", "Home", new { supplierId = supplier.SupplierId, repeat = true });
+        }
+
+        //public IActionResult AddSupplyStep4()
+        //{
             
-            return View(_db.Supply.ToList());
-        }
+        //}
 
-        public IActionResult AddSupply()
-        {
-            return View();
-        }
 
-        public IActionResult AddSupply(SupplyAndLotViewModel model)
+        public IActionResult DeleteSupply(int id)
         {
+
+            var lotsToDelete = _db.Lot.Where(l => l.SupplyId == id).ToList();
+
+            foreach (var lot in lotsToDelete)
+            {
+                _db.Lot.Remove(lot);
+            }
+
+            var supplyToDelete = _db.Supply.Single(s => s.SupplyId == id);
+            _db.Supply.Remove(supplyToDelete);
+
+            _db.SaveChanges();
+
             return RedirectToAction("SuppliesList", "Home");
         }
 
