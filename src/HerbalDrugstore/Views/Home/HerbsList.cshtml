@@ -6,8 +6,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link rel="stylesheet" type="text/css" href="/css/styleSearch.css">
 
-<h2>HerbsList</h2>
+<h2>Herbs List</h2>
 
 <div class="row">
     <div class="col-md-12">
@@ -25,23 +26,35 @@
                             <form asp-action="FilterHerbs" class="form-horizontal" role="form" >
                                 <div class="form-group">
                                     <div>
-                                        <label for="filter">Filter by</label>
+                                        <label >Sort by</label>
                                     </div>
                                     <select class="form-control" name="value">
                                         <option value="0" selected="">Default</option>
                                         <option value="1">Alphabetically by name</option>
                                         <option value="2">Alphabetically by species</option>
                                     </select>
-                                    <input type="hidden" id="hfFruitName" name="FruitName" />
-                                    <input type="submit" class="btn btn-default" value="Filter" >
+                                    <input type="submit" name="command" value="Sort" class="btn btn-default" >
                                 </div>
                                 <div class="form-group">
-                                    <div><label for="contain">Species</label></div>
-                                    <input class="form-control" type="text">
+                                    <div>
+                                        <label>Filter by</label>
+                                    </div>
+                                    <select class="form-control" name="value2">
+                                        <option value="0" selected="">Default</option>
+                                        <option value="1">Show only fully filled</option>
+                                        <option value="2">Show only partly filled</option>
+                                    </select>
+                                    <input type="submit" name="command" value="Filter" class="btn btn-default" >
                                 </div>
                                 <div class="form-group">
-                                   <div> <label for="contain">Contains the words</label></div>
+                                    <div><label for="contain">Search by species</label></div>
                                     <input class="form-control" type="text">
+                                    <input type="submit" name="command" value="Search" class="btn btn-default" >
+                                </div>
+                                <div class="form-group">
+                                   <div> <label for="contain">Search by description</label></div>
+                                    <input class="form-control" type="text">
+                                    <input type="submit" name="command" value="Search" class="btn btn-default">
                                 </div>
                                 <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                             </form>
@@ -96,68 +109,3 @@
         }
     </tbody>
 </table>
-
-<style>
-    body {
-        padding-top: 50px;
-    }
-
-    .input-group {
-        width: 350px;
-    }
-
-    input, select, textarea {
-    max-width: 400px;
-}
-    .dropdown.dropdown-lg .dropdown-menu {
-        margin-top: -1px;
-        padding: 6px 20px;
-    }
-
-    .dropdown-menu-right {
-        right: auto;
-    }
-
-    .input-group-btn .btn-group {
-        display: flex !important;
-    }
-
-    .btn-group .btn {
-        border-radius: 0;
-        margin-left: -1px;
-    }
-
-        .btn-group .btn:last-child {
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
-        }
-
-    .btn-group .form-horizontal .btn[type="submit"] {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-    }
-
-    .form-horizontal .form-group {
-        margin-left: 0;
-        margin-right: 0;
-        margin-top: 20px;
-        margin-top: 20px;
-    }
-
-    .form-group .form-control:last-child {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-    }
-
-    .dropdown.dropdown-lg {
-        position: static !important;
-    }
-
-        .dropdown.dropdown-lg .dropdown-menu {
-            min-width: 500px;
-        }
-
-    .row {
-        margin-bottom: 15px;
-    }
-</style>

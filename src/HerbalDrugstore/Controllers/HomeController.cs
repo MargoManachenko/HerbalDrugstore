@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HerbalDrugstore.Data;
 using HerbalDrugstore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.Cli.Utils.CommandParsing;
 using Microsoft.EntityFrameworkCore;
 
 namespace HerbalDrugstore.Controllers
@@ -95,17 +96,38 @@ namespace HerbalDrugstore.Controllers
             return RedirectToAction("HerbsList", "Home");
         }
 
-        public IActionResult FilterHerbs(int value)
+        public IActionResult FilterHerbs(int value, int value2, string command)
         {
-            if (value == 1)
+            if (command.Equals("Sort"))
             {
-                var sortedByName = _db.Herb.OrderBy(h => h.Name).ToList();
-                return View(sortedByName);
+                if (value == 1)
+                {
+                    var sortedByName = _db.Herb.OrderBy(h => h.Name).ToList();
+                    return View(sortedByName);
+                }
+                if (value == 2)
+                {
+                    var sortedBySpecies = _db.Herb.OrderBy(h => h.Species == "").ThenBy(h => h.Species).ToList();
+                    return View(sortedBySpecies);
+                    }
+
+                return RedirectToAction("HerbsList", "Home");
             }
-            if (value == 2)
+
+            if (command.Equals("Filter"))
             {
-                var sortedBySpecies = _db.Herb.OrderBy(h => h.Species == "").ThenBy(h => h.Species).ToList();
-                return View(sortedBySpecies);
+                if (value2 == 1)
+                {
+                    var fullyFilled = _db.Herb.Where(h => h.Species != "" || h.Description != "").ToList();
+                    return View(fullyFilled);
+                }
+                if (value2 == 2)
+                {
+                    var partlyFilled = _db.Herb.Where(h => h.Species == "" && h.Description == "").ToList();
+                    return View(partlyFilled);
+                }
+
+                return RedirectToAction("HerbsList", "Home");
             }
 
             return RedirectToAction("HerbsList", "Home");

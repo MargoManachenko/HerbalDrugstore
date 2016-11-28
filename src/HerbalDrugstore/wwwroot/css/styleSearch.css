@@ -19,9 +19,12 @@
         right: auto;
     }
 
+
     .input-group-btn .btn-group {
         display: flex !important;
+        margin-bottom: 50px;
     }
+
 
     .btn-group .btn {
         border-radius: 0;
@@ -55,7 +58,7 @@
     }
 
         .dropdown.dropdown-lg .dropdown-menu {
-            min-width: 500px;
+            min-width: 560px;
         }
 
     .row {
