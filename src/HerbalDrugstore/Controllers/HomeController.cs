@@ -451,7 +451,7 @@ namespace HerbalDrugstore.Controllers
             var supplies = _db.Supply.Include(s => s.Supplier).OrderBy(s => s.Supplier.SupplierId).ToList();
 
             var suppliers = _db.Supplier.ToList();
-            
+
             var a =
                 supplies.GroupBy(x => x.Supplier.SupplierId)
                     .OrderByDescending(y => y.Count())
@@ -459,12 +459,49 @@ namespace HerbalDrugstore.Controllers
                     .Select(z => z.Key)
                     .ToList();
 
-            
+            var supplRes = new List<Supplier>();
 
-            var popularSupplier = _db.Supplier.Single(s => s.SupplierId == a[0]);
-            
+            for (int i = 0; i < a.Count; i++)
+            {
+                foreach (var sup in suppliers)
+                {
+                    if (sup.SupplierId == a[i])
+                    {
+                        supplRes.Add(sup);
+                    }
+                }
+            }
 
-            return View(supplies);
+            var quant = new List<int>();
+
+            for (int i = 0; i < supplRes.Count; i++)
+            {
+                quant.Add(0);;
+
+                foreach (var supl in supplies)
+                {
+                    if (supl.SupplierId == supplRes[i].SupplierId)
+                    {
+                        quant[i] += 1;
+                    }
+
+                }
+            }
+
+            var model = new List<SuppliersChart>();
+
+            for (int i = 0; i < quant.Count; i++)
+            {
+                var qR = quant[i];
+                var sR = supplRes[i];
+                var m = new SuppliersChart() {Supplier = sR,Quanntity = qR};
+                model.Add(m);
+            }
+
+            //var popularSupplier = _db.Supplier.Single(s => s.SupplierId == a[0]);
+
+
+            return View(model);
 
         }
 
