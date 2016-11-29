@@ -1,0 +1,11 @@
+@model IEnumerable<HerbalDrugstore.Models.Herb>
+
+@{
+    ViewData["Title"] = "Statistics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Reports</h2>
+
+<p><a asp-action="ReportSuppliesForPastWeek"> Supplies for the past week</a> </p>
+<p><a asp-action="ReportSuppliesForPastMonth">  Supplies for the past month</a> </p>

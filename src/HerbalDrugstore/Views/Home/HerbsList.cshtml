@@ -8,6 +8,18 @@
 
 <link rel="stylesheet" type="text/css" href="/css/styleSearch.css">
 
+<!--<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script language="javascript" type="text/javascript">
+
+        function Print() {
+            window.print();
+        }
+    </script>
+</head>-->
+
+
 <h2>Herbs List</h2>
 
 
@@ -97,13 +109,13 @@
         </tr>
     </thead>
     <tbody>
-    
-    @foreach (var item in Model)
-    {
-        if (ViewBag.FoundIds.Count != 0)
+
+        @foreach (var item in Model)
         {
-            if (ViewBag.FoundIds.Contains(item.HerbId))
+            if (ViewBag.FoundIds.Count != 0)
             {
+                if (ViewBag.FoundIds.Contains(item.HerbId))
+                {
                     <tr style="background-color: greenyellow">
                         <td>
                             @Html.DisplayFor(modelItem => item.Name)
@@ -142,28 +154,29 @@
                 }
 
             }
-        
-        else
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Species)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    <a asp-action="EditHerb" asp-route-id="@item.HerbId">Edit</a> |
-                    <a asp-action="DetailsHerb" asp-route-id="@item.HerbId">Details(no)</a> |
-                    <a asp-action="DeleteHerb" asp-route-id="@item.HerbId">Delete</a>
-                </td>
-            </tr>
+
+            else
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Species)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        <a asp-action="EditHerb" asp-route-id="@item.HerbId">Edit</a> |
+                        <a asp-action="DetailsHerb" asp-route-id="@item.HerbId">Details(no)</a> |
+                        <a asp-action="DeleteHerb" asp-route-id="@item.HerbId">Delete</a>
+                    </td>
+                </tr>
+            }
         }
-    }
 
 
     </tbody>
 </table>
+

@@ -1,0 +1,80 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model HerbalDrugstore.Models.RepoSupplyAndLots
+
+@{
+    ViewData["Title"] = "ReportSuppliesForPastWeek";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Supplies for the past week</h2>
+
+<div>
+    <hr />
+    @if (Model.Supply.Count != 0)
+    {
+        for (var j = 0; j < Model.Supply.Count; j++)
+        {
+            <dl class="dl-horizontal">
+
+                <h4>Supply: </h4>
+
+                <dt>
+                    Number of supply
+                </dt>
+                <dd>
+                    @Model.Supply[j].SupplyId
+                </dd>
+                <dt>
+                    Supplier
+                </dt>
+                <dd>
+                    @Model.Supply[j].Supplier.CompanyName
+                </dd>
+                <dt>
+                    Total price
+                </dt>
+                <dd>
+                    @Model.Supply[j].Price
+                </dd>
+                <dt>
+                    Date
+                </dt>
+                <dd>
+                    @Model.Supply[j].DateOfSupply
+                </dd>
+            </dl>
+            <h4>Lots: </h4>
+
+            for (var i = 0; i < Model.Lots.Count; i++)
+            {
+                if (Model.Lots[i].SupplyId == Model.Supply[j].SupplyId)
+                {
+                    <dl class="dl-horizontal">
+
+                        <p># @(i+1)</p>
+                        <dt>Drug</dt>
+                        <dd>@Model.Lots[i].Grug.Name</dd>
+
+                        <dt>Drug quantity</dt>
+                        <dd>@Model.Lots[i].Quantity</dd>
+
+                        <dt>Lot price</dt>
+                        <dd>@Model.Lots[i].Price</dd>
+                    </dl>
+                }
+            }
+
+        }
+        <br/>
+        <button OnClick="javascript:window.print();" class="btn btn-default">Print</button>
+    }
+    else
+    {
+        <h4>No supplies in database for the past week</h4>
+    }
+
+</div>
+<br/>
+<div>
+    <a asp-action="Reports">Back to List</a>
+</div>

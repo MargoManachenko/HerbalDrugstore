@@ -364,7 +364,7 @@ namespace HerbalDrugstore.Controllers
 
             if (command.Equals("Finish"))
             {
-                return RedirectToAction("AddSupplyStep4", "Home", new {id = supply.SupplyId});
+                return RedirectToAction("AddSupplyStep4", "Home", new { id = supply.SupplyId });
             }
             var supplier = _db.Supplier.OrderByDescending(s => s.SupplierId).FirstOrDefault();
 
@@ -390,7 +390,7 @@ namespace HerbalDrugstore.Controllers
             _db.Supply.Update(supply);
             _db.SaveChanges();
 
-            return RedirectToAction("SuppliesList","Home");
+            return RedirectToAction("SuppliesList", "Home");
         }
 
 
@@ -410,6 +410,62 @@ namespace HerbalDrugstore.Controllers
             _db.SaveChanges();
 
             return RedirectToAction("SuppliesList", "Home");
+        }
+
+        public IActionResult Reports()
+        {
+            return View();
+        }
+
+        public IActionResult Statistics()
+        {
+            return View();
+        }
+
+        public IActionResult ReportSuppliesForPastWeek()
+        {
+            var now = DateTime.Now;
+            var suppliesList = _db.Supply.Where(s => s.DateOfSupply.Year == now.Year || s.DateOfSupply.Year == (now.Year - 1) && s.DateOfSupply.DayOfYear <= now.DayOfYear && s.DateOfSupply.DayOfYear >= (now.DayOfYear - 7)).Include(s => s.Supplier).ToList();
+
+            var lotsList = (from l in _db.Lot from s in suppliesList where l.SupplyId == s.SupplyId select l).Include(d => d.Grug).ToList();
+
+            var model = new RepoSupplyAndLots() { Supply = suppliesList, Lots = lotsList };
+
+            return View(model);
+        }
+
+        public IActionResult ReportSuppliesForPastMonth()
+        {
+            var now = DateTime.Now;
+            var suppliesList = _db.Supply.Where(s => s.DateOfSupply.Year == now.Year || s.DateOfSupply.Year == (now.Year - 1) && s.DateOfSupply.DayOfYear <= now.DayOfYear && s.DateOfSupply.DayOfYear >= (now.DayOfYear - 31)).Include(s => s.Supplier).ToList();
+
+            var lotsList = (from l in _db.Lot from s in suppliesList where l.SupplyId == s.SupplyId select l).Include(d => d.Grug).ToList();
+
+            var model = new RepoSupplyAndLots() { Supply = suppliesList, Lots = lotsList };
+
+            return View(model);
+        }
+
+        public IActionResult SuppliersStatistic()
+        {
+            var supplies = _db.Supply.Include(s => s.Supplier).OrderBy(s => s.Supplier.SupplierId).ToList();
+
+            var suppliers = _db.Supplier.ToList();
+            
+            var a =
+                supplies.GroupBy(x => x.Supplier.SupplierId)
+                    .OrderByDescending(y => y.Count())
+                    .Take(suppliers.Count)
+                    .Select(z => z.Key)
+                    .ToList();
+
+            
+
+            var popularSupplier = _db.Supplier.Single(s => s.SupplierId == a[0]);
+            
+
+            return View(supplies);
+
         }
 
         public IActionResult About()
