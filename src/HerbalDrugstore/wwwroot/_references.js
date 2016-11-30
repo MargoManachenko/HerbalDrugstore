@@ -1,4 +1,7 @@
 ﻿/// <autosync enabled="true" />
+/// <reference path="javascript-autocomplete-master/auto-complete.js" />
+/// <reference path="js/jquery.smart_autocomplete.js" />
+/// <reference path="js/qs_score.js" />
 /// <reference path="js/site.js" />
 /// <reference path="lib/bootstrap/dist/js/bootstrap.js" />
 /// <reference path="lib/jquery/dist/jquery.js" />

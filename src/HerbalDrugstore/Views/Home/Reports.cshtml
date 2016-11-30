@@ -4,8 +4,34 @@
     ViewData["Title"] = "Statistics";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js" async defer></script>
+    <link rel="stylesheet" href="/JavaScript-autoComplete-master/auto-complete.css">
+    <script src="/JavaScript-autoComplete-master/auto-complete.min.js"></script>
+</head>
 <h2>Reports</h2>
+
+<input id="hero-demo" autofocus type="text" name="q" placeholder="Programming languages ..." style="width:100%;max-width:600px;outline:0">
 
 <p><a asp-action="ReportSuppliesForPastWeek"> Supplies for the past week</a> </p>
 <p><a asp-action="ReportSuppliesForPastMonth">  Supplies for the past month</a> </p>
+
+
+
+<script>
+        var demo1 = new autoComplete({
+            selector: '#hero-demo',
+            minChars: 1,
+            source: function(term, suggest){
+                term = term.toLowerCase();
+                var choices = ['Аир', 'Адонис', 'Алтейлекарственный', 'Анисобыкновенный', 'BASIC', 'Batch', 'C', 'C++', 'CSS', 'Clojure', 'COBOL', 'ColdFusion', 'Erlang', 'Fortran', 'Groovy', 'Haskell', 'HTML', 'Java', 'JavaScript', 'Lisp', 'Perl', 'PHP', 'PowerShell', 'Python', 'Ruby', 'Scala', 'Scheme', 'SQL', 'TeX', 'Шиповникобыкновенный'];
+                var suggestions = [];
+                for (i=0;i<choices.length;i++)
+                    if (~choices[i].toLowerCase().indexOf(term)) suggestions.push(choices[i]);
+                suggest(suggestions);
+            }
+        });
+
+</script>

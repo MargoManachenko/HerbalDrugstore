@@ -6,6 +6,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <link rel="stylesheet" type="text/css" href="/css/styleSearch.css">
 
 <!--<head>
@@ -27,10 +28,9 @@
     <div class="col-md-12">
         <div class="input-group" id="adv-search">
             <form asp-action="SearchHerb">
-                <input type="text" class="form-control" name="nameToSearch" placeholder="Search by name">
-                <input type="submit" class="btn btn-default" value="Search">
+                <input type="text" class="form-control" name="nameToSearch" placeholder="Search by name" autocomplete="off">
+                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
             </form>
-
             <div class="input-group-btn">
                 <div class="btn-group" role="group">
                     <div class="dropdown dropdown-lg">
@@ -43,8 +43,10 @@
                                     </div>
                                     <select class="form-control" name="value">
                                         <option value="0" selected="">Default</option>
-                                        <option value="1">Alphabetically by name</option>
-                                        <option value="2">Alphabetically by species</option>
+                                        <option value="1">Ascending by name</option>
+                                        <option value="2">Ascending by species</option>
+                                        <option value="3">Descending by name</option>
+                                        <option value="4">Descending by species</option>
                                     </select>
                                     <input type="submit" name="command" value="Sort" class="btn btn-default">
                                 </div>
@@ -60,38 +62,48 @@
                                     <input type="submit" name="command" value="Filter" class="btn btn-default">
                                 </div>
                                 <div class="form-group">
-                                    <div><label for="contain">Search by species</label></div>
+                                    <div>
+                                        <label for="contain">Search by species</label>
+                                    </div>
                                     <input class="form-control" type="text">
                                     <input type="submit" name="command" value="Search" class="btn btn-default">
                                 </div>
                                 <div class="form-group">
-                                    <div> <label for="contain">Search by description</label></div>
+                                    <div>
+                                        <label for="contain">Search by description</label>
+                                    </div>
                                     <input class="form-control" type="text">
                                     <input type="submit" name="command" value="Search" class="btn btn-default">
                                 </div>
-                                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                                <button asp-action="SearchHerb" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                             </form>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+
+@if (@ViewBag.NotForundMessage != null)
+{
+    <h3 style="color: red;">@ViewBag.NotForundMessage </h3>
+    <a asp-action="HerbsList" class="btn btn-danger">Clear</a>
+}
+
+
+@if (ViewBag.FoundIds != null)
+{
+    <h5>Shown results for " @ViewBag.SearchString "</h5>
+    
+    <a asp-action="HerbsList" class="btn btn-info">Clear</a>
+}
+
+
 <p>
     <a asp-action="AddHerb" class="btn btn-default">Create New</a>
 </p>
-
-
-<p style="color: red">@ViewBag.NotForundMessage </p>
-
-
-@if (ViewBag.FoundIds.Count != 0)
-{
-    <h5>Shown results for @ViewBag.SearchString</h5>
-}
 
 <table class="table">
     <thead>
@@ -109,10 +121,9 @@
         </tr>
     </thead>
     <tbody>
-
         @foreach (var item in Model)
         {
-            if (ViewBag.FoundIds.Count != 0)
+            if (ViewBag.FoundIds != null)
             {
                 if (ViewBag.FoundIds.Contains(item.HerbId))
                 {

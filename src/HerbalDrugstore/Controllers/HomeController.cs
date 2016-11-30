@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using HerbalDrugstore.Data;
 using HerbalDrugstore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.DotNet.Cli.Utils.CommandParsing;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,11 +26,33 @@ namespace HerbalDrugstore.Controllers
             return View();
         }
 
-        public IActionResult HerbsList(string notFoundMessage, List<int> foundIds, string searchString)
+        public IActionResult HerbsList(string notFoundMessage, List<int> foundIds, string searchString, bool tempData )
         {
             ViewBag.NotForundMessage = notFoundMessage;
-            ViewBag.FoundIds = foundIds;
+            
             ViewBag.SearchString = searchString;
+
+            if (tempData)
+            {
+                   var model = (List<Herb>)TempData["herbs"];
+            }
+         
+
+            if (foundIds.Count != 0)
+            {
+                ViewBag.FoundIds = foundIds;
+            }
+
+            //if (sortResult.Count != 0)
+            //{
+            //    ViewBag.SearchString = searchString;
+            //    return View(sortResult);
+            //}
+            //if (filterResult.Count != 0)
+            //{
+            //    ViewBag.SearchString = searchString;
+            //    return View(filterResult);
+            //}
 
             return View(_db.Herb.ToList());
         }
@@ -122,15 +145,26 @@ namespace HerbalDrugstore.Controllers
             {
                 if (value == 1)
                 {
-                    var sortedByName = _db.Herb.OrderBy(h => h.Name).ToList();
-                    return View(sortedByName);
+                    var sortedByNameAsc = new List<Herb>();
+                    sortedByNameAsc = _db.Herb.OrderBy(h => h.Name).ToList();
+                    return RedirectToAction("HerbsList","Home",new { sortResult = sortedByNameAsc, searchString = "Order by name ascending"});
                 }
                 if (value == 2)
                 {
-                    var sortedBySpecies = _db.Herb.OrderBy(h => h.Species == "").ThenBy(h => h.Species).ToList();
-                    return View(sortedBySpecies);
+                    var sortedBySpeciesAsc = new List<Herb>();
+                    sortedBySpeciesAsc = _db.Herb.OrderBy(h => h.Species == "").ThenBy(h => h.Species).ToList();
+                    return RedirectToAction("HerbsList", "Home", new { sortResult = sortedBySpeciesAsc, searchString = "Order by spicies ascending" });
                 }
-
+                if (value == 3)
+                {
+                    var sortedByNameDesc = _db.Herb.OrderByDescending(h => h.Name).ToList();
+                    return RedirectToAction("HerbsList", "Home", new { sortResult = sortedByNameDesc, searchString = "Order by name descending" });
+                }
+                if (value == 4)
+                {
+                    var sortedBySpeciesDesc = _db.Herb.OrderBy(h => h.Species == "").OrderByDescending(h => h.Species).ToList();
+                    return RedirectToAction("HerbsList", "Home", new { sortResult = sortedBySpeciesDesc, searchString = "Order by spicies descending" });
+                }
                 return RedirectToAction("HerbsList", "Home");
             }
 
@@ -139,12 +173,13 @@ namespace HerbalDrugstore.Controllers
                 if (value2 == 1)
                 {
                     var fullyFilled = _db.Herb.Where(h => h.Species != "" || h.Description != "").ToList();
-                    return View(fullyFilled);
+                    TempData["herbs"] = fullyFilled;
+                    return RedirectToAction("HerbsList", "Home", new {tempData = true,searchString = "Fully filled"});
                 }
                 if (value2 == 2)
                 {
                     var partlyFilled = _db.Herb.Where(h => h.Species == "" && h.Description == "").ToList();
-                    return View(partlyFilled);
+                    return RedirectToAction("HerbsList", "Home", new { filterResult = partlyFilled, searchString = "Fully filled" });
                 }
 
                 return RedirectToAction("HerbsList", "Home");
@@ -505,11 +540,18 @@ namespace HerbalDrugstore.Controllers
 
         }
 
+        public ActionResult SortingAscPartialView()
+        {
+           
+            return PartialView(_db.Herb.ToList());
+        }
+
         public IActionResult About()
         {
-            ViewData["Message"] = "Your application description page.";
 
-            return View();
+            ViewData["Message"] = "Your application description page.";
+ ViewBag.Message = "Это частичное представление.";
+            return View(_db.Herb.ToList());
         }
 
         public IActionResult Contact()
