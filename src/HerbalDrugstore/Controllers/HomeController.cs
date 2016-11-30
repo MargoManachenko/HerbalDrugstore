@@ -266,7 +266,9 @@ namespace HerbalDrugstore.Controllers
 
             var comp = new List<Compound>();
 
-            foreach (var compound in _db.Compound.ToList())
+            var compList = _db.Compound.Include(c => c.Drug).Include(c => c.Herb).ToList();
+
+            foreach (var compound in compList)
             {
                 if (compound.DrugId == id)
                 {
@@ -310,6 +312,34 @@ namespace HerbalDrugstore.Controllers
             return RedirectToAction("DrugsList", "Home");
         }
 
+        public IActionResult ConsumeDrug(int id, int quantity)
+        {
+            var drugToConsume = _db.Drug.Single(d => d.DrugId == id);
+
+            if (drugToConsume.Quantity >= quantity)
+            {
+                drugToConsume.Quantity -= quantity;
+                _db.Drug.Update(drugToConsume);
+                _db.SaveChanges();
+                return RedirectToAction("DrugsList", "Home");
+            }
+
+            if(drugToConsume.Quantity < quantity)
+            {
+                return RedirectToAction("ErrorDrugConsuming", "Home", new { consuming = quantity, drugQuantity = drugToConsume.Quantity, drugName = drugToConsume.Name });
+            }
+
+            return RedirectToAction("DrugsList", "Home");
+        }
+
+        public IActionResult ErrorDrugConsuming(int drugQuantity, int consuming, string drugName)
+        {
+            ViewBag.drugQuantity = drugQuantity;
+            ViewBag.consuming = consuming;
+            ViewBag.drugName = drugName;
+
+            return View();
+        }
 
         public IActionResult SuppliersList()
         {
@@ -405,6 +435,10 @@ namespace HerbalDrugstore.Controllers
                 Supply = supply,
                 SupplyId = supply.SupplyId
             };
+
+            drug.Quantity += quantity;
+
+            _db.Drug.Update(drug);
 
             _db.Lot.Add(lot);
             _db.SaveChanges();
@@ -506,18 +540,20 @@ namespace HerbalDrugstore.Controllers
                     .Select(z => z.Key)
                     .ToList();
 
-            var supplRes = new List<Supplier>();
+            var supplRes = (from t in a from sup in suppliers where sup.SupplierId == t select sup).ToList();
 
-            for (int i = 0; i < a.Count; i++)
-            {
-                foreach (var sup in suppliers)
-                {
-                    if (sup.SupplierId == a[i])
-                    {
-                        supplRes.Add(sup);
-                    }
-                }
-            }
+            //var supplRes = new List<Supplier>();
+
+            //for (int i = 0; i < a.Count; i++)
+            //{
+            //    foreach (var sup in suppliers)
+            //    {
+            //        if (sup.SupplierId == a[i])
+            //        {
+            //            supplRes.Add(sup);
+            //        }
+            //    }
+            //}
 
             var quant = new List<int>();
 
@@ -551,6 +587,15 @@ namespace HerbalDrugstore.Controllers
             return View(model);
 
         }
+
+        //public IActionResult Calculate()
+        //{
+        //    var currentDate = DateTime.Now;
+
+        //    var suppliesForMonth = _db.Supply.Where(s => s.DateOfSupply.Year == currentDate.Year 
+        //    && s.DateOfSupply.DayOfYear >= currentDate.DayOfYear - 30
+        //    || s.DateOfSupply.Year == currentDate.Year - 1).ToList();
+        //}
 
         public ActionResult SortingAscPartialView()
         {

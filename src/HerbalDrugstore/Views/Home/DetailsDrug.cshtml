@@ -9,39 +9,42 @@
 
 <h2>Drug details</h2>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dd></dd>
-        <dt>@Html.DisplayNameFor(model => model.Drug.Name)</dt>
-        <dd>@Html.DisplayFor(model => model.Drug.Name)</dd>
-        <dt>@Html.DisplayNameFor(model => model.Drug.Indications)</dt>
-        <dd>@Html.DisplayFor(model => model.Drug.Indications)</dd>
-        <dt>@Html.DisplayNameFor(model => model.Drug.Instruction)</dt>
-        <dd>@Html.DisplayFor(model => model.Drug.Instruction)</dd>
-        <dt>@Html.DisplayNameFor(model => model.Drug.Quantity)</dt>
-        <dd>@Html.DisplayFor(model => model.Drug.Quantity)</dd>
-        <dt>Compound</dt><dd></dd>
+<div class="panel panel-info">
+    <div class="panel-heading"><h4>@Html.DisplayNameFor(model => model.Drug.Name) : @Html.DisplayFor(model => model.Drug.Name)</h4></div>
+    <div class="panel-body">
+        <dl class="dl-horizontal">
+            <dt>@Html.DisplayNameFor(model => model.Drug.Indications)</dt>
+            <dd>@Html.DisplayFor(model => model.Drug.Indications)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Drug.Instruction)</dt>
+            <dd>@Html.DisplayFor(model => model.Drug.Instruction)</dd>
+            <dt>@Html.DisplayNameFor(model => model.Drug.Quantity)</dt>
+            <dd>@Html.DisplayFor(model => model.Drug.Quantity)</dd>
+        </dl>
+    </div>
 
+    <div class="panel-heading"><h4>Compound</h4></div>
+    <div class="panel-body">
         @if (Model.Compound.Count != 0)
         {
+
             @foreach (var component in Model.Compound)
-             {
-                 <dt>Herb</dt>
-                 <dd>@component.Herb.Name</dd>
-                 <dt>Quantity</dt>
-                 <dd>@component.Quantity</dd>
-             }
+                {
+                <dl class="dl-horizontal">
+                    <dt>Herb</dt>
+                    <dd>@component.Herb.Name</dd>
+                    <dt>Quantity</dt>
+                    <dd>@component.Quantity</dd>
+                </dl>
+            }
         }
         else
         {
-            <dd>empty</dd>
+           <p>No herbs in the drug</p>
         }
-
-
-    </dl>
+    </div>
 </div>
+
 <div>
-    @Html.ActionLink("Edit", "EditDrug", new {  id = Model.Drug.DrugId }) |
+    @Html.ActionLink("Edit", "EditDrug", new { id = Model.Drug.DrugId }) |
     <a asp-action="DrugsList">Back to List</a>
 </div>

@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Error";
+}
+<br/>
+<div class="panel panel-danger">
+    <div class="panel-heading"><h4>Can not implement operation!</h4></div>
+    <div class="panel-body">
+        <p>You want to decrease drug @ViewBag.drugName by @ViewBag.consuming items.</p>
+        <p>Only @ViewBag.drugQuantity items in stock</p>
+        
+    </div>
+    <div class="panel-footer"><a asp-action="DrugsList">Back to list <br/></a>
+<a asp-action="AddSupplyStep1">Order Drug</a></div>
+</div>
+
+

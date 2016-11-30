@@ -9,7 +9,7 @@
 <h2>Drugs List</h2>
 
 <p>
-    <a asp-action="AddDrug" class="btn btn-default">Create New</a>
+    <a asp-action="AddDrug" class="btn btn-success">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -24,29 +24,36 @@
             <th>
                 @Html.DisplayNameFor(model => model.Indications)
             </th>
+            <th>Consume</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+        <tr>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Indications)
-                </td>
-                <td>
-                    <a asp-action="EditDrug" asp-route-id="@item.DrugId">Edit</a> |
-                    <a asp-action="DetailsDrug" asp-route-id="@item.DrugId">Details</a> |
-                    <a asp-action="DeleteDrug" asp-route-id="@item.DrugId">Delete</a>
-                </td>
-            </tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Indications)
+            </td>
+            <td style="width: 200px">
+                <form asp-action="ConsumeDrug"asp-route-id="@item.DrugId" style="display: inline-flex">
+                    <input type="number" min="0" name="quantity"class="form-control" style="width: 40%" />
+                    <input type="submit"  class="btn btn-info" style="width: 25%" value="ok"/>
+                </form>
+            </td>
+            <td>
+                <a asp-action="EditDrug" asp-route-id="@item.DrugId">Edit</a> |
+                <a asp-action="DetailsDrug" asp-route-id="@item.DrugId">Details</a> |
+                <a asp-action="DeleteDrug" asp-route-id="@item.DrugId">Delete</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>
