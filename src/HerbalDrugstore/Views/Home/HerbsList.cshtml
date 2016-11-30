@@ -61,7 +61,7 @@
                                     </select>
                                     <input type="submit" name="command" value="Filter" class="btn btn-default">
                                 </div>
-                                <div class="form-group">
+                                <!--<div class="form-group">
                                     <div>
                                         <label for="contain">Search by species</label>
                                     </div>
@@ -75,7 +75,7 @@
                                     <input class="form-control" type="text">
                                     <input type="submit" name="command" value="Search" class="btn btn-default">
                                 </div>
-                                <button asp-action="SearchHerb" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                                <button asp-action="SearchHerb" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>-->
                             </form>
                         </div>
                     </div>
@@ -85,6 +85,10 @@
     </div>
 </div>
 
+
+<p>
+    <a asp-action="AddHerb" class="btn btn-success">Create New</a>
+</p>
 
 @if (@ViewBag.NotForundMessage != null)
 {
@@ -99,11 +103,12 @@
     
     <a asp-action="HerbsList" class="btn btn-info">Clear</a>
 }
+@if (ViewBag.Message != null)
+{
+    <h4>@ViewBag.Message</h4>
+    <a asp-action="HerbsList" class="btn btn-info">Clear</a><br/>
+}
 
-
-<p>
-    <a asp-action="AddHerb" class="btn btn-default">Create New</a>
-</p>
 
 <table class="table">
     <thead>

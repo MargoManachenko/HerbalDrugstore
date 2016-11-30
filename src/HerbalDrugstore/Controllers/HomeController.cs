@@ -26,36 +26,7 @@ namespace HerbalDrugstore.Controllers
             return View();
         }
 
-        public IActionResult HerbsList(string notFoundMessage, List<int> foundIds, string searchString, bool tempData )
-        {
-            ViewBag.NotForundMessage = notFoundMessage;
-            
-            ViewBag.SearchString = searchString;
 
-            if (tempData)
-            {
-                   var model = (List<Herb>)TempData["herbs"];
-            }
-         
-
-            if (foundIds.Count != 0)
-            {
-                ViewBag.FoundIds = foundIds;
-            }
-
-            //if (sortResult.Count != 0)
-            //{
-            //    ViewBag.SearchString = searchString;
-            //    return View(sortResult);
-            //}
-            //if (filterResult.Count != 0)
-            //{
-            //    ViewBag.SearchString = searchString;
-            //    return View(filterResult);
-            //}
-
-            return View(_db.Herb.ToList());
-        }
 
         [HttpGet]
         public IActionResult AddHerb()
@@ -138,6 +109,56 @@ namespace HerbalDrugstore.Controllers
 
             return RedirectToAction("HerbsList", "Home");
         }
+        public IActionResult HerbsList(string notFoundMessage, List<int> foundIds, string commandSort, string command)
+        {
+
+            if (commandSort == "sortedByNameAsc")
+            {
+                var sortedByNameAsc = _db.Herb.OrderBy(h => h.Name).ToList();
+                ViewBag.Message = "Растения упорядочены в алфавитном порядке по возрастанию по имени";
+                return View(sortedByNameAsc);
+            }
+            if (commandSort == "sortedBySpeciesAsc")
+            {
+
+                var sortedBySpeciesAsc = _db.Herb.OrderBy(h => h.Species == "").ThenBy(h => h.Species).ToList();
+                ViewBag.Message = "Растения упорядочены в алфавитном порядке по возрастанию по виду";
+                return View(sortedBySpeciesAsc);
+            }
+            if (commandSort == "sortedByNameDesc")
+            {
+                var sortedByNameDesc = _db.Herb.OrderByDescending(h => h.Name).ToList();
+                ViewBag.Message = "Растения упорядочены в алфавитном порядке по убыванию по виду";
+                return View(sortedByNameDesc);
+            }
+            if (commandSort == "sortedBySpeciesDesc")
+            {
+                var sortedBySpeciesDesc = _db.Herb.OrderBy(h => h.Species == "").OrderByDescending(h => h.Species).ToList();
+                ViewBag.Message = "Растения упорядочены в алфавитном порядке по убыванию по имени";
+                return View(sortedBySpeciesDesc);
+            }
+
+            if (commandSort == "filteredFullyFilled")
+            {
+                var fullyFilled = _db.Herb.Where(h => h.Species != "" || h.Description != "").ToList();
+                ViewBag.Message = "Растения с полностью заполненной информацией";
+                return View(fullyFilled);
+            }
+            if (commandSort == "filteredPartlyFilled")
+            {
+                var partlyFilled = _db.Herb.Where(h => h.Species == "" && h.Description == "").ToList();
+                ViewBag.Message = "Растения с частично заполненной информацией";
+                return View(partlyFilled);
+            }
+
+            ViewBag.NotForundMessage = notFoundMessage;
+
+            if (foundIds.Count != 0)
+            {
+                ViewBag.FoundIds = foundIds;
+            }
+            return View(_db.Herb.ToList());
+        }
 
         public IActionResult FilterHerbs(int value, int value2, string command)
         {
@@ -145,25 +166,19 @@ namespace HerbalDrugstore.Controllers
             {
                 if (value == 1)
                 {
-                    var sortedByNameAsc = new List<Herb>();
-                    sortedByNameAsc = _db.Herb.OrderBy(h => h.Name).ToList();
-                    return RedirectToAction("HerbsList","Home",new { sortResult = sortedByNameAsc, searchString = "Order by name ascending"});
+                    return RedirectToAction("HerbsList", "Home", new { commandSort = "sortedByNameAsc" });
                 }
                 if (value == 2)
                 {
-                    var sortedBySpeciesAsc = new List<Herb>();
-                    sortedBySpeciesAsc = _db.Herb.OrderBy(h => h.Species == "").ThenBy(h => h.Species).ToList();
-                    return RedirectToAction("HerbsList", "Home", new { sortResult = sortedBySpeciesAsc, searchString = "Order by spicies ascending" });
+                    return RedirectToAction("HerbsList", "Home", new { commandSort = "sortedBySpeciesAsc" });
                 }
                 if (value == 3)
                 {
-                    var sortedByNameDesc = _db.Herb.OrderByDescending(h => h.Name).ToList();
-                    return RedirectToAction("HerbsList", "Home", new { sortResult = sortedByNameDesc, searchString = "Order by name descending" });
+                    return RedirectToAction("HerbsList", "Home", new { commandSort = "sortedByNameDesc" });
                 }
                 if (value == 4)
                 {
-                    var sortedBySpeciesDesc = _db.Herb.OrderBy(h => h.Species == "").OrderByDescending(h => h.Species).ToList();
-                    return RedirectToAction("HerbsList", "Home", new { sortResult = sortedBySpeciesDesc, searchString = "Order by spicies descending" });
+                    return RedirectToAction("HerbsList", "Home", new { commandSort = "sortedBySpeciesDesc" });
                 }
                 return RedirectToAction("HerbsList", "Home");
             }
@@ -172,14 +187,11 @@ namespace HerbalDrugstore.Controllers
             {
                 if (value2 == 1)
                 {
-                    var fullyFilled = _db.Herb.Where(h => h.Species != "" || h.Description != "").ToList();
-                    TempData["herbs"] = fullyFilled;
-                    return RedirectToAction("HerbsList", "Home", new {tempData = true,searchString = "Fully filled"});
+                    return RedirectToAction("HerbsList", "Home", new { commandSort = "filteredFullyFilled" });
                 }
                 if (value2 == 2)
                 {
-                    var partlyFilled = _db.Herb.Where(h => h.Species == "" && h.Description == "").ToList();
-                    return RedirectToAction("HerbsList", "Home", new { filterResult = partlyFilled, searchString = "Fully filled" });
+                    return RedirectToAction("HerbsList", "Home", new { commandSort = "filteredPartlyFilled" });
                 }
 
                 return RedirectToAction("HerbsList", "Home");
@@ -511,7 +523,7 @@ namespace HerbalDrugstore.Controllers
 
             for (int i = 0; i < supplRes.Count; i++)
             {
-                quant.Add(0);;
+                quant.Add(0); ;
 
                 foreach (var supl in supplies)
                 {
@@ -529,7 +541,7 @@ namespace HerbalDrugstore.Controllers
             {
                 var qR = quant[i];
                 var sR = supplRes[i];
-                var m = new SuppliersChart() {Supplier = sR,Quanntity = qR};
+                var m = new SuppliersChart() { Supplier = sR, Quanntity = qR };
                 model.Add(m);
             }
 
@@ -542,7 +554,7 @@ namespace HerbalDrugstore.Controllers
 
         public ActionResult SortingAscPartialView()
         {
-           
+
             return PartialView(_db.Herb.ToList());
         }
 
@@ -550,7 +562,7 @@ namespace HerbalDrugstore.Controllers
         {
 
             ViewData["Message"] = "Your application description page.";
- ViewBag.Message = "Это частичное представление.";
+            ViewBag.Message = "Это частичное представление.";
             return View(_db.Herb.ToList());
         }
 
