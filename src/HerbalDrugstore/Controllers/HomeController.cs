@@ -699,6 +699,7 @@ namespace HerbalDrugstore.Controllers
                         if(totalDays == 0) continue;
                     }
 
+                    
                     var totalQuantities = quantities.Sum();
 
                     //if (totalQuantities == 0 || totalDays ==0)

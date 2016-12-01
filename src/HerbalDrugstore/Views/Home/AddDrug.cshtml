@@ -7,6 +7,11 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js" async defer></script>
+    <link rel="stylesheet" href="/JavaScript-autoComplete-master/auto-complete.css">
+    <script src="/JavaScript-autoComplete-master/auto-complete.min.js"></script>
     <script language="javascript" type="text/javascript">
 
         function addRow() {
@@ -69,9 +74,9 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-md-2 control-label"></label>
+            <label class="col-md-2 control-label">Herbs</label>
             <div class="col-md-10">
-                <input type="text" name="TBoxes" class="form-control" />
+                <input type="text" id="hero-demo" name="TBoxes" class="form-control" />
             </div>
         </div>
 
@@ -95,6 +100,22 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+<script>
+        var demo1 = new autoComplete({
+            selector: '#hero-demo',
+            minChars: 1,
+            source: function(term, suggest){
+                term = term.toLowerCase();
+                var choices = ['Archaeopteridaceae', 'Cordaitaceae', 'Cycadaceae', 'Drepanophycaceae', 'Ephedraceae', 'Ginkgoaceae', 'Gnetaceae', 'Hookeriaceae', 'Huperziaceae', 'Lycopodiaceae', 'Stangeriaceae', 'Welwitschiaceae', 'Zamiaceae'];
+                var suggestions = [];
+                for (i=0;i<choices.length;i++)
+                    if (~choices[i].toLowerCase().indexOf(term)) suggestions.push(choices[i]);
+                suggest(suggestions);
+            }
+        });
+
+</script>
 
 <style>
     #space {
@@ -122,3 +143,4 @@
         margin-left: -65px;
     }
 </style>
+
