@@ -241,6 +241,19 @@ namespace HerbalDrugstore.Controllers
                     _db.Compound.Add(compound);
                 }
             }
+
+            var drugchanges = new DrugChanges()
+            {
+                Date = DateTime.Now,
+                DrugId = drugToC.DrugId,
+                Drug = drugToC,
+                Increasing = false,
+                Quantity = drugToC.Quantity,
+                SupplierName = ""
+            };
+
+            _db.DrugChanges.Add(drugchanges);
+
             _db.SaveChanges();
 
             return RedirectToAction("DrugsList", "Home");
@@ -262,6 +275,7 @@ namespace HerbalDrugstore.Controllers
         public IActionResult EditDrug(int id)
         {
             var drug = _db.Drug.Single(d => d.DrugId == id);
+
             //var compound = _db.Compound.Where(c => c.DrugId == id).ToList();
 
             var comp = new List<Compound>();
@@ -319,12 +333,25 @@ namespace HerbalDrugstore.Controllers
             if (drugToConsume.Quantity >= quantity)
             {
                 drugToConsume.Quantity -= quantity;
+
+                var drugchanges = new DrugChanges()
+                {
+                    Date = DateTime.Now,
+                    DrugId = drugToConsume.DrugId,
+                    Drug = drugToConsume,
+                    Increasing = false,
+                    Quantity = quantity,
+                    SupplierName = ""
+                };
+
+                _db.DrugChanges.Add(drugchanges);
                 _db.Drug.Update(drugToConsume);
                 _db.SaveChanges();
+
                 return RedirectToAction("DrugsList", "Home");
             }
 
-            if(drugToConsume.Quantity < quantity)
+            if (drugToConsume.Quantity < quantity)
             {
                 return RedirectToAction("ErrorDrugConsuming", "Home", new { consuming = quantity, drugQuantity = drugToConsume.Quantity, drugName = drugToConsume.Name });
             }
@@ -421,6 +448,7 @@ namespace HerbalDrugstore.Controllers
         }
 
 
+
         public IActionResult AddSupplyStep3(int drugId, int quantity, float price, string command)
         {
             var drug = _db.Drug.Single(d => d.DrugId == drugId);
@@ -441,20 +469,32 @@ namespace HerbalDrugstore.Controllers
             _db.Drug.Update(drug);
 
             _db.Lot.Add(lot);
+
+            var supplier = _db.Supplier.OrderByDescending(s => s.SupplierId).FirstOrDefault();
+
+            var drugchanges = new DrugChanges()
+            {
+                DrugId = drug.DrugId,
+                Drug = drug,
+                Increasing = true,
+                Quantity = quantity,
+                SupplierName = supplier.ContactName
+            };
+
+            _db.DrugChanges.Add(drugchanges);
+
             _db.SaveChanges();
 
             if (command.Equals("Finish"))
             {
                 return RedirectToAction("AddSupplyStep4", "Home", new { id = supply.SupplyId });
             }
-            var supplier = _db.Supplier.OrderByDescending(s => s.SupplierId).FirstOrDefault();
-
 
             return RedirectToAction("AddSupplyStep2", "Home", new { supplierId = supplier.SupplierId, repeat = true });
         }
 
         [HttpGet]
-        public IActionResult AddSupplyStep4(int id)
+        public IActionResult AddSupplyStep4(int id, int drugId, int quantity, float price)
         {
             ViewBag.Id = id;
 
@@ -468,6 +508,9 @@ namespace HerbalDrugstore.Controllers
             supply.Price = price;
             supply.DateOfSupply = date;
 
+            var change = _db.DrugChanges.OrderByDescending(s => s.ChangeId).FirstOrDefault();
+            change.Date = date;
+            _db.DrugChanges.Update(change);
             _db.Supply.Update(supply);
             _db.SaveChanges();
 
@@ -586,6 +629,116 @@ namespace HerbalDrugstore.Controllers
 
             return View(model);
 
+        }
+
+        public IActionResult DrugChangesGrid()
+        {
+            return View(_db.DrugChanges.Include(c => c.Drug).OrderBy(c => c.Date).ToList());
+        }
+
+        public IActionResult DeleteDrugChange(int id)
+        {
+            var change = _db.DrugChanges.Single(c => c.ChangeId == id);
+            _db.DrugChanges.Remove(change);
+            _db.SaveChanges();
+            return RedirectToAction("DrugChangesGrid", "Home");
+        }
+
+        public IActionResult Calculation()
+        {
+            var model = new List<PromptViewModel>();
+
+            var changes = _db.DrugChanges.Where(c => c.Increasing).Include(c => c.Drug).ToList();
+
+            var drugs = _db.DrugChanges.Select(c => c.Drug).Distinct().ToList();
+
+            for (int i = 0; i < drugs.Count; i++)
+            {
+                var supplierName = "";
+                var dates = new List<DateTime>();
+                var quantities = new List<int>();
+
+                foreach (var drugChangese in changes)
+                {
+                    if (drugs[i].Name == drugChangese.Drug.Name && drugChangese.Increasing && drugChangese.SupplierName != "")
+                    {
+                        dates.Add(drugChangese.Date);
+                        quantities.Add(drugChangese.Quantity);
+                        supplierName = drugChangese.SupplierName;
+                    }
+                }
+                if (dates.Count != 0 && quantities.Count != 0)
+                {
+                    int totalDays;
+                    var thisYear = new List<int>();
+                    var prevYear = new List<int>();
+
+                    foreach (var date in dates)
+                    {
+                        if (date.Year == DateTime.Now.Year)
+                            thisYear.Add(date.DayOfYear);
+                        if (date.Year == DateTime.Now.Year - 1)
+                            prevYear.Add(date.DayOfYear);
+
+                    }
+                    
+                    if (prevYear.Count != 0)
+                    {
+                        
+                        var daysSumThisYear = thisYear.Max() - thisYear.Min();
+                        var daysSumPrevYear = prevYear.Max() - prevYear.Min();
+                        totalDays = daysSumPrevYear + daysSumThisYear;
+                        if (totalDays == 0) continue;
+
+                    }
+                    else
+                    {
+                        var maxDay = thisYear.Max();
+                        var minDay = thisYear.Min();
+                        totalDays = maxDay - minDay;
+                        if(totalDays == 0) continue;
+                    }
+
+                    var totalQuantities = quantities.Sum();
+
+                    //if (totalQuantities == 0 || totalDays ==0)
+                    //{
+                    //    return View(model);
+                    //}
+                    var perDay = totalQuantities / totalDays;
+
+                    var daysLeft = DateTime.Now.DayOfYear - thisYear.Max() - 7;
+                    var daysLeftForinfo = DateTime.Now.DayOfYear - thisYear.Max();
+                    var available = drugs[i].Quantity;
+
+                    var needed = perDay*daysLeft;
+                    
+                    var enought = needed <= available;
+
+                    if (!enought)
+                    {
+                        var days = " for less than 1 day";
+
+                        if (drugs[i].Quantity / (perDay * daysLeft) > 1)
+                        {
+                            days = " for " + drugs[i].Quantity / perDay + " days";
+                        }
+
+                        var infoStr = "The drug decreases by " + perDay +
+                            " items a day in average. The last order was shipped " + daysLeftForinfo + " days ago."; 
+
+                        model.Add(new PromptViewModel()
+                        {
+                            Drug = drugs[i],
+                            ConsumePerDay = perDay,
+                            Days = days,
+                            SupplierName = supplierName,
+                            Info = infoStr
+                        });
+                    }
+                }
+            }
+            return View(model);
         }
 
         //public IActionResult Calculate()

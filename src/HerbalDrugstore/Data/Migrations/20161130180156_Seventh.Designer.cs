@@ -8,9 +8,10 @@ using HerbalDrugstore.Data;
 namespace HerbalDrugstore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161130180156_Seventh")]
+    partial class Seventh
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -59,29 +60,6 @@ namespace HerbalDrugstore.Data.Migrations
                     b.HasKey("DrugId");
 
                     b.ToTable("Drug");
-                });
-
-            modelBuilder.Entity("HerbalDrugstore.Models.DrugChanges", b =>
-                {
-                    b.Property<int>("ChangeId")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<int>("DrugId");
-
-                    b.Property<bool>("Increasing");
-
-                    b.Property<int>("Quantity");
-
-                    b.Property<string>("SupplierName")
-                        .IsRequired();
-
-                    b.HasKey("ChangeId");
-
-                    b.HasIndex("DrugId");
-
-                    b.ToTable("DrugChanges");
                 });
 
             modelBuilder.Entity("HerbalDrugstore.Models.Herb", b =>
@@ -180,14 +158,6 @@ namespace HerbalDrugstore.Data.Migrations
                     b.HasOne("HerbalDrugstore.Models.Herb", "Herb")
                         .WithMany()
                         .HasForeignKey("HerbId1")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("HerbalDrugstore.Models.DrugChanges", b =>
-                {
-                    b.HasOne("HerbalDrugstore.Models.Drug", "Drug")
-                        .WithMany()
-                        .HasForeignKey("DrugId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

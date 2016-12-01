@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace HerbalDrugstore.Models
 {
@@ -23,9 +20,12 @@ namespace HerbalDrugstore.Models
         public bool Increasing { get; set; }
 
         [Required]
+        public int Quantity { get; set; }
+
+        [Required]
         public DateTime Date { get; set; }
 
         [Required]
-        public List<string> SupplierNames { get; set; }
+        public string SupplierName { get; set; }
     }
 }

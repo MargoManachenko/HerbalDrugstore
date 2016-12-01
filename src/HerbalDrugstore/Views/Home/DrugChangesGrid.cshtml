@@ -1,0 +1,64 @@
+@model IEnumerable<HerbalDrugstore.Models.DrugChanges>
+
+@{
+    ViewData["Title"] = "DrugChanges";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>DrugChanges</h2>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+           Drug name
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Increasing)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SupplierName)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Drug.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>@if (item.Increasing == true)
+            {
+                <span>+</span>
+            }
+            else
+            {
+                <span>-</span>
+            }
+
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SupplierName)
+        </td>
+
+        <td>
+            <a asp-action="Details" asp-route-id="@item.ChangeId">Details</a> |
+            <a asp-action="DeleteDrugChange" asp-route-id="@item.ChangeId">Delete</a>
+        </td>
+    </tr>
+}
+    </tbody>
+</table>

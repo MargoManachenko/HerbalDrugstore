@@ -1,5 +1,7 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="javascript-autocomplete-master/auto-complete.js" />
+/// <reference path="js/autocomplete.js" />
+/// <reference path="js/jquery.caret-1.5.2.min.js" />
 /// <reference path="js/jquery.smart_autocomplete.js" />
 /// <reference path="js/qs_score.js" />
 /// <reference path="js/site.js" />

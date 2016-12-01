@@ -1,0 +1,50 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model IEnumerable<HerbalDrugstore.Models.PromptViewModel>
+
+@{
+    ViewData["Title"] = "Prompts page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<div class="panel panel-warning">
+    <div class="panel-heading">
+        <h3>Prompts page</h3>
+    </div>
+    @if (Model.Count() != 0)
+    {
+
+        foreach (var item in Model)
+        {
+            <div class="panel-body">
+
+                <h4>
+                    According to calculations the drug <strong>"@item.Drug.Name"</strong> left in stock
+                    <strong style="font-size: 25px">@item.Days.</strong>
+                </h4>
+                <h4>
+                    Available quantity: @item.Drug.Quantity .
+                </h4>
+
+                <h4>The mest recent supplier is @item.SupplierName company.</h4>
+                <hr/>
+                <h4>Additional info:</h4>
+                <h5>
+                    @item.Info
+                </h5>
+                <button class="btn btn-info"><span style="color: white; text-decoration: none">@Html.ActionLink("Make order right now", "AddSupplyStep1", "Home", item.SupplierName)</span></button>
+
+                
+            </div>
+        }
+    }
+    else
+
+    {
+        <div class="panel-body">
+            <h4>It is all good! You stored with all drugs.</h4>
+        </div>
+    }
+
+</div>
+<!--asp-route="item.SupplierName"-->

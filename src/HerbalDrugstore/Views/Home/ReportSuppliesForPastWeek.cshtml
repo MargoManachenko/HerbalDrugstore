@@ -14,44 +14,50 @@
     {
         for (var j = 0; j < Model.Supply.Count; j++)
         {
-            <dl class="dl-horizontal">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>Supply:</h4>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            Number of supply
+                        </dt>
+                        <dd>
+                            @Model.Supply[j].SupplyId
+                        </dd>
+                        <dt>
+                            Supplier
+                        </dt>
+                        <dd>
+                            @Model.Supply[j].Supplier.CompanyName
+                        </dd>
+                        <dt>
+                            Total price
+                        </dt>
+                        <dd>
+                            @Model.Supply[j].Price
+                        </dd>
+                        <dt>
+                            Date
+                        </dt>
+                        <dd>
+                            @Model.Supply[j].DateOfSupply
+                        </dd>
+                    </dl>
+                </div>
+                <div class="panel-heading">
+                    <h4>Lots: </h4>
+                </div>
+                <div class="panel-body">
 
-                <h4>Supply: </h4>
-
-                <dt>
-                    Number of supply
-                </dt>
-                <dd>
-                    @Model.Supply[j].SupplyId
-                </dd>
-                <dt>
-                    Supplier
-                </dt>
-                <dd>
-                    @Model.Supply[j].Supplier.CompanyName
-                </dd>
-                <dt>
-                    Total price
-                </dt>
-                <dd>
-                    @Model.Supply[j].Price
-                </dd>
-                <dt>
-                    Date
-                </dt>
-                <dd>
-                    @Model.Supply[j].DateOfSupply
-                </dd>
-            </dl>
-            <h4>Lots: </h4>
-
-            for (var i = 0; i < Model.Lots.Count; i++)
-            {
-                if (Model.Lots[i].SupplyId == Model.Supply[j].SupplyId)
-                {
+                    @for (var i = 0; i < Model.Lots.Count; i++)
+                    {
+                        if (Model.Lots[i].SupplyId == Model.Supply[j].SupplyId)
+                        {
                     <dl class="dl-horizontal">
 
-                        <p># @(i+1)</p>
+                        <p># @(i + 1)</p>
                         <dt>Drug</dt>
                         <dd>@Model.Lots[i].Grug.Name</dd>
 
@@ -61,20 +67,21 @@
                         <dt>Lot price</dt>
                         <dd>@Model.Lots[i].Price</dd>
                     </dl>
-                }
-            }
-
+                        }
+                    }
+                </div>
+            </div>
         }
-        <br/>
-        <button OnClick="javascript:window.print();" class="btn btn-default">Print</button>
     }
+
     else
     {
-        <h4>No supplies in database for the past week</h4>
+    <h4>No supplies in database for the past week</h4>
     }
 
-</div>
-<br/>
-<div>
-    <a asp-action="Reports">Back to List</a>
+    <button OnClick="javascript:window.print();" class="btn btn-default">Print</button>
+    <br />
+    <div>
+        <a asp-action="Reports">Back to List</a>
+    </div>
 </div>

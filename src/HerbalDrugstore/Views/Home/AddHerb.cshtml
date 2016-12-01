@@ -4,57 +4,16 @@
     ViewData["Title"] = "AddHerb";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<!--<head>
+<head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js" async defer></script>
     <link rel="stylesheet" href="/JavaScript-autoComplete-master/auto-complete.css">
     <script src="/JavaScript-autoComplete-master/auto-complete.min.js"></script>
-
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.smart_autocomplete.js"></script>
-
-    <script type="text/javascript" src="/js/qs_score.js"></script>
-
-    <script type="text/javascript">
-        $(function(){
-            //example 1
-            $("#basic_autocomplete_field").smartAutoComplete({source: ['Apple', 'Banana', 'Orange', 'Mango']});
-
-            //example 2
-            $("#country_field").smartAutoComplete({source: ["United States", "Canada",  "Austria", "Congo",  "Dominican Republic", "Estonia", "Germany", "Greece", "Hungary", "India", "Israel", "Italy", "Japan", "Jordan", "Kenya", "Latvia", "Luxembourg", "Malta", "Mongolia", "Nepal", "Netherlands", "New Zealand", "Poland", "Russian Federation", "Swaziland", "Sweden",  "Ukraine", "United Arab Emirates", "United Kingdom"," Yugoslavia", "Zaire", "Zambia", "Zimbabwe"]
-    , forceSelect: true, maxResults: 5, delay: 200 });
-    </script>
 </head>
 
 
-<fieldset id="example_1">
-    <legend>Example 1</legend>
-
-    <p>Most basic configuration, with source provided as an Array</p>
-
-    <div>
-        <label for="basic_autocomplete_field">Favorite Fruit</label>
-        <input type="text" autocomplete="off" id="basic_autocomplete_field" />
-    </div>
-
-</fieldset>
-
-<fieldset id="example_2">
-    <legend>Example 2</legend>
-
-    <p>This widget loads the source list via AJAX from the given URL as the source. Also, <em>forceSelect</em> option is enforced, <em>maxResults</em> is set to 5 and there's a <em>delay</em> of 300ms between requests.</p>
-
-    <div>
-        <label for="country_field">Country</label>
-        <input type="text" autocomplete="off" id="country_field" />
-    </div>
-
-</fieldset>-->
-
-<h2>AddHerb</h2>
-
+<h2>Add Herb</h2>
 
 <form asp-action="AddHerb">
     <div class="form-horizontal">
@@ -71,7 +30,7 @@
         <div class="form-group">
             <label asp-for="Species" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Species" name="q" id="spicies" class="form-control" />
+                <input asp-for="Species" id="hero-demo" name="q" class="form-control" />
                 <span asp-validation-for="Species" class="text-danger" />
             </div>
         </div>
@@ -94,23 +53,23 @@
 <div>
     <a asp-action="HerbsList">Back to List</a>
 </div>
+<script>
+        var demo1 = new autoComplete({
+            selector: '#hero-demo',
+            minChars: 1,
+            source: function(term, suggest){
+                term = term.toLowerCase();
+                var choices = ['Archaeopteridaceae', 'Cordaitaceae', 'Cycadaceae', 'Drepanophycaceae', 'Ephedraceae', 'Ginkgoaceae', 'Gnetaceae', 'Hookeriaceae', 'Huperziaceae', 'Lycopodiaceae', 'Stangeriaceae', 'Welwitschiaceae', 'Zamiaceae'];
+                var suggestions = [];
+                for (i=0;i<choices.length;i++)
+                    if (~choices[i].toLowerCase().indexOf(term)) suggestions.push(choices[i]);
+                suggest(suggestions);
+            }
+        });
+
+</script>
 
 <!--section Scripts {
     {await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }-->
-<script>
-    var demo1 = new autoComplete({
-        selector: '#spicies',
-        minChars: 1,
-        source: function(term, suggest){
-            term = term.toLowerCase();
-            var choices = ['Archaeopteridaceae', 'Cordaitaceae', 'Cycadaceae', 'Drepanophycaceae', 'Ephedraceae', 'Ginkgoaceae', 'Gnetaceae', 'Hookeriaceae', 'Huperziaceae', 'Lycopodiaceae', 'Stangeriaceae', 'Welwitschiaceae', 'Zamiaceae'];
-            var suggestions = [];
-            for (i=0;i<choices.length;i++)
-                if (~choices[i].toLowerCase().indexOf(term)) suggestions.push(choices[i]);
-            suggest(suggestions);
-        }
-    });
-
-</script>
 

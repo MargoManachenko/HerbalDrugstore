@@ -16,6 +16,7 @@ namespace HerbalDrugstore.Data
         public virtual DbSet<Lot> Lot { get; set; }
         public virtual DbSet<Supplier> Supplier { get; set; }
         public virtual DbSet<Supply> Supply { get; set; }
+        public virtual DbSet<DrugChanges> DrugChanges { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

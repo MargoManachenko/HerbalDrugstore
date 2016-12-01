@@ -8,9 +8,10 @@ using HerbalDrugstore.Data;
 namespace HerbalDrugstore.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161130180702_Eighth")]
+    partial class Eighth
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.0-rtm-21431")
@@ -71,11 +72,6 @@ namespace HerbalDrugstore.Data.Migrations
                     b.Property<int>("DrugId");
 
                     b.Property<bool>("Increasing");
-
-                    b.Property<int>("Quantity");
-
-                    b.Property<string>("SupplierName")
-                        .IsRequired();
 
                     b.HasKey("ChangeId");
 
@@ -144,10 +140,14 @@ namespace HerbalDrugstore.Data.Migrations
                         .IsRequired()
                         .HasAnnotation("MaxLength", 20);
 
+                    b.Property<int?>("DrugChangesChangeId");
+
                     b.Property<string>("Phone")
                         .IsRequired();
 
                     b.HasKey("SupplierId");
+
+                    b.HasIndex("DrugChangesChangeId");
 
                     b.ToTable("Supplier");
                 });
@@ -202,6 +202,13 @@ namespace HerbalDrugstore.Data.Migrations
                         .WithMany()
                         .HasForeignKey("SupplyId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("HerbalDrugstore.Models.Supplier", b =>
+                {
+                    b.HasOne("HerbalDrugstore.Models.DrugChanges")
+                        .WithMany("Supplier")
+                        .HasForeignKey("DrugChangesChangeId");
                 });
 
             modelBuilder.Entity("HerbalDrugstore.Models.Supply", b =>
