@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using NuGet.Common;
 
 namespace HerbalDrugstore.Models
 {
@@ -24,6 +26,7 @@ namespace HerbalDrugstore.Models
         public DateTime DateOfSupply { get; set; }
 
         [DataType(DataType.Currency)]
+        [DisplayFormat(DataFormatString = "${0:#,0}", ApplyFormatInEditMode = true)]
         public float Price { get; set; }
     }
 }

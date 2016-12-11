@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HerbalDrugstore.Data;
 using HerbalDrugstore.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.DotNet.Cli.Utils.CommandParsing;
 using Microsoft.EntityFrameworkCore;
 
 namespace HerbalDrugstore.Controllers
@@ -449,7 +445,7 @@ namespace HerbalDrugstore.Controllers
 
 
 
-        public IActionResult AddSupplyStep3(int drugId, int quantity, float price, string command)
+        public IActionResult AddSupplyStep3(int drugId, int quantity, float price,int supplierId, string command)
         {
             var drug = _db.Drug.Single(d => d.DrugId == drugId);
             var supply = _db.Supply.OrderByDescending(s => s.SupplyId).FirstOrDefault();
@@ -470,7 +466,7 @@ namespace HerbalDrugstore.Controllers
 
             _db.Lot.Add(lot);
 
-            var supplier = _db.Supplier.OrderByDescending(s => s.SupplierId).FirstOrDefault();
+            var supplier = _db.Supplier.Single(s => s.SupplierId == supplierId);
 
             var drugchanges = new DrugChanges()
             {
@@ -478,7 +474,7 @@ namespace HerbalDrugstore.Controllers
                 Drug = drug,
                 Increasing = true,
                 Quantity = quantity,
-                SupplierName = supplier.ContactName
+                SupplierName = supplier.CompanyName
             };
 
             _db.DrugChanges.Add(drugchanges);
@@ -716,7 +712,7 @@ namespace HerbalDrugstore.Controllers
                     
                     var enought = needed <= available;
 
-                    if (!enought)
+                    if (!enought || needed < 0)
                     {
                         var days = " for less than 1 day";
 

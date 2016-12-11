@@ -15,7 +15,7 @@
     <div class="form-horizontal">
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
+        <input type="hidden" value="@Model.Supplier.SupplierId" name="supplierId">
         <div class="form-horizontal">
             <label class="col-md-2 control-label">Drug</label>
             <select class="form-control" name="drugId">
