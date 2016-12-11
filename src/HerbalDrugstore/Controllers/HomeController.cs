@@ -445,7 +445,7 @@ namespace HerbalDrugstore.Controllers
 
 
 
-        public IActionResult AddSupplyStep3(int drugId, int quantity, float price,int supplierId, string command)
+        public IActionResult AddSupplyStep3(int drugId, int quantity, float price, int supplierId, string command)
         {
             var drug = _db.Drug.Single(d => d.DrugId == drugId);
             var supply = _db.Supply.OrderByDescending(s => s.SupplyId).FirstOrDefault();
@@ -642,7 +642,7 @@ namespace HerbalDrugstore.Controllers
 
         public IActionResult Calculation()
         {
-            var model = new List<PromptViewModel>();
+            var promptsList = new List<Prompt>();
 
             var changes = _db.DrugChanges.Where(c => c.Increasing).Include(c => c.Drug).ToList();
 
@@ -677,10 +677,10 @@ namespace HerbalDrugstore.Controllers
                             prevYear.Add(date.DayOfYear);
 
                     }
-                    
+
                     if (prevYear.Count != 0)
                     {
-                        
+
                         var daysSumThisYear = thisYear.Max() - thisYear.Min();
                         var daysSumPrevYear = prevYear.Max() - prevYear.Min();
                         totalDays = daysSumPrevYear + daysSumThisYear;
@@ -692,24 +692,25 @@ namespace HerbalDrugstore.Controllers
                         var maxDay = thisYear.Max();
                         var minDay = thisYear.Min();
                         totalDays = maxDay - minDay;
-                        if(totalDays == 0) continue;
+                        if (totalDays == 0) continue;
                     }
 
-                    
+
                     var totalQuantities = quantities.Sum();
 
                     //if (totalQuantities == 0 || totalDays ==0)
                     //{
                     //    return View(model);
                     //}
+
                     var perDay = totalQuantities / totalDays;
 
                     var daysLeft = DateTime.Now.DayOfYear - thisYear.Max() - 7;
                     var daysLeftForinfo = DateTime.Now.DayOfYear - thisYear.Max();
                     var available = drugs[i].Quantity;
 
-                    var needed = perDay*daysLeft;
-                    
+                    var needed = perDay * daysLeft;
+
                     var enought = needed <= available;
 
                     if (!enought || needed < 0)
@@ -722,19 +723,126 @@ namespace HerbalDrugstore.Controllers
                         }
 
                         var infoStr = "The drug decreases by " + perDay +
-                            " items a day in average. The last order was shipped " + daysLeftForinfo + " days ago."; 
+                            " items a day in average. The last order was shipped " + daysLeftForinfo + " days ago.";
 
-                        model.Add(new PromptViewModel()
+                        promptsList.Add(new Prompt()
                         {
                             Drug = drugs[i],
                             ConsumePerDay = perDay,
                             Days = days,
                             SupplierName = supplierName,
-                            Info = infoStr
+                            Info = infoStr,
+                            Suppliers = _db.Supplier.ToList()
                         });
+
                     }
                 }
             }
+            var model = new PromptAndSuppliersViewModel
+            {
+                Prompts = promptsList,
+                SuppliersList = _db.Supplier.ToList()
+            };
+
+            return View(model);
+        }
+
+        public List<DrugStatistics> MakeDrugStatistic(int[] drugsId)
+        {
+            var drugStatistic = new List<DrugStatistics>();
+
+            var changes = _db.DrugChanges.Where(c => c.Increasing).Include(c => c.Drug).ToList();
+
+            var allDrugs = _db.DrugChanges.Select(c => c.Drug).Distinct().ToList();
+
+            var drugsToOrder = (from id in drugsId from drug in allDrugs where drug.DrugId == id select drug).ToList();
+
+            foreach (var d in drugsToOrder)
+            {
+                var supplierName = "";
+                var dates = new List<DateTime>();
+                var quantities = new List<int>();
+
+                foreach (var drugChangese in changes)
+                {
+                    if (d.Name == drugChangese.Drug.Name && drugChangese.Increasing && drugChangese.SupplierName != "")
+                    {
+                        dates.Add(drugChangese.Date);
+                        quantities.Add(drugChangese.Quantity);
+                        supplierName = drugChangese.SupplierName;
+                    }
+                }
+                if (dates.Count != 0 && quantities.Count != 0)
+                {
+                    int totalDays;
+                    var thisYear = new List<int>();
+                    var prevYear = new List<int>();
+
+                    foreach (var date in dates)
+                    {
+                        if (date.Year == DateTime.Now.Year)
+                            thisYear.Add(date.DayOfYear);
+                        if (date.Year == DateTime.Now.Year - 1)
+                            prevYear.Add(date.DayOfYear);
+
+                    }
+
+                    if (prevYear.Count != 0)
+                    {
+
+                        var daysSumThisYear = thisYear.Max() - thisYear.Min();
+                        var daysSumPrevYear = prevYear.Max() - prevYear.Min();
+                        totalDays = daysSumPrevYear + daysSumThisYear;
+                        if (totalDays == 0) continue;
+
+                    }
+                    else
+                    {
+                        var maxDay = thisYear.Max();
+                        var minDay = thisYear.Min();
+                        totalDays = maxDay - minDay;
+                        if (totalDays == 0) continue;
+                    }
+
+
+                    var totalQuantities = quantities.Sum();
+
+                    var perDay = totalQuantities / totalDays;
+
+                    var daysLeft = DateTime.Now.DayOfYear - thisYear.Max();
+
+                    var available = d.Quantity;
+
+                    var needed = perDay * daysLeft;
+
+                    var supply = _db.Lot.FirstOrDefault(l => l.DrugId == d.DrugId);
+                    var price = supply.Price / supply.Quantity;
+
+                    drugStatistic.Add(new DrugStatistics()
+                    {
+                        DrugName = d.Name,
+                        SupplierName = supplierName,
+                        UnitsPerDay = perDay,
+                        Recomended = needed,
+                        DrugPrice = price,
+
+                    });
+                }
+            }
+            return drugStatistic;
+        }
+
+        public IActionResult MakeBigOrder(int[] checkedDrugs)
+        {
+            var drugStatistics = MakeDrugStatistic(checkedDrugs);
+            var supplier = drugStatistics[0].SupplierName;
+            var allSupliers = _db.Supplier.Select(s => s.CompanyName).ToList();
+            var model = new MakeBigOrderViewModel()
+            {
+                DrugStatisticses = drugStatistics,
+                SuppliresCompanies = allSupliers,
+                SupplierName = supplier
+            };
             return View(model);
         }
 

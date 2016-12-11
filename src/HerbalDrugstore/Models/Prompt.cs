@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 
 namespace HerbalDrugstore.Models
 {
-    public class PromptViewModel
+    public class Prompt
     {
         public Drug Drug { get; set; }
+
+        public List<Supplier> Suppliers { get; set; }
 
         public string SupplierName { get; set; }
 

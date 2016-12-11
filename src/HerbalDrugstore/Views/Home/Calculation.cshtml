@@ -1,5 +1,5 @@
 @using Microsoft.EntityFrameworkCore.Metadata.Internal
-@model IEnumerable<HerbalDrugstore.Models.PromptViewModel>
+@model HerbalDrugstore.Models.PromptAndSuppliersViewModel
 
 @{
     ViewData["Title"] = "Prompts page";
@@ -18,177 +18,74 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        @if (Model.Count() != 0)
+                        
+                        @if (Model.Prompts.Count() != 0)
                         {
-                            <div class="pull-right">
+                            <div class="form">
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-success btn-filter" data-target="pagado">Pagado</button>
-                                    <button type="button" class="btn btn-warning btn-filter" data-target="pendiente">Pendiente</button>
-                                    <button type="button" class="btn btn-danger btn-filter" data-target="cancelado">Cancelado</button>
-                                    <select>
-                                        <option>Green Line</option>
-                                        <option>Flashline</option>
-                                        <option>Green forest</option>
+                                    <h2>Group by common supplier</h2>
+                                    <select id="selectBox" class="form-control" data-style="btn-primary" style="margin: 20px 0 0 40px">
+                                        <option data-target="all" value="all">All</option>
+                                        @foreach (var supplier in Model.SuppliersList)
+                                        {
+                                            <option data-target=@supplier.CompanyName value=@supplier.CompanyName>
+                                                @supplier.CompanyName
+                                            </option>
+                                        }
+
                                     </select>
-                                    <button type="button" class="btn btn-default btn-filter" data-target="all">All</button>
                                 </div>
                             </div>
+                            <form  asp-controller="Home" asp-action="MakeBigOrder">
                             <div class="table-container">
                                 <table class="table table-filter " id="table">
                                     <tbody>
-                                        @foreach (var item in Model)
-                                        {
-                                            <tr data-status="pagado" class="tblRow">
-                                                <td class="cId" style="visibility: hidden; width:1px">@item.Drug.DrugId</td>
-                                                <td>
-                                                    <div class="ckbox">
-                                                        <input type="checkbox">
-                                                        <label for="checkbox1"></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:;" class="star">
-                                                        <i class="glyphicon glyphicon-star"></i>
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <div class="media">
+                                    @foreach (var item in Model.Prompts)
+                                    {
+                                        <tr data-status=@item.SupplierName class="tblRow">
+                                            <td class="cId" style="visibility: hidden; width: 1px">@item.Drug.DrugId</td>
+                                            <td>
+                                                <div class="ckbox">
+                                                    <input type="checkbox" name="checkedDrugs" value=@item.Drug.DrugId>
+                                                    <label for="checkbox1"></label>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <a href="javascript:;" class="star">
+                                                    <i class="glyphicon glyphicon-star"></i>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <div class="media">
 
-                                                        <div class="media-body">
-                                                            <span class="media-meta pull-right">Febrero 13, 2016</span>
-                                                            <h4 class="title">
-                                                                @item.Drug.Name
-                                                                <span class="pull-right pagado">Supplier: @item.SupplierName</span>
-                                                            </h4>
-                                                            <p class="summary">
+                                                    <div class="media-body">
+                                                        <span class="media-meta pull-right">Febrero 13, 2016</span>
+                                                        <h4 class="title">
+                                                            @item.Drug.Name
+                                                            <span class="pull-right pagado">Supplier: @item.SupplierName</span>
+                                                        </h4>
+                                                        <p class="summary">
                                                             <p>
                                                                 According to calculations the drug <strong>"@item.Drug.Name"</strong> left in stock<strong>@item.Days.</strong>
                                                             </p>
                                                             <p>The mest recent supplier is @item.SupplierName company.</p>
                                                             <p>Additional info: @item.Info</p>
-                                                            </p>
-                                                            <button class="btn btn-info"><span style="color: white; text-decoration: none">@Html.ActionLink("Quick order", "AddSupplyStep1", "Home", item.SupplierName)</span></button>
-                                                        </div>
+                                                        </p>
+                                                        <button class="btn btn-info"><span style="color: white; text-decoration: none">@Html.ActionLink("Quick order", "AddSupplyStep1", "Home", item.SupplierName)</span></button>
                                                     </div>
-                                                </td>
-                                            </tr>
-                                        }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
 
-                                        @*<tr data-status="pendiente">
-                                                <td>
-                                                    <div class="ckbox">
-                                                        <input type="checkbox" id="checkbox3">
-                                                        <label for="checkbox3"></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:;" class="star">
-                                                        <i class="glyphicon glyphicon-star"></i>
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <div class="media">
-                                                        <a href="#" class="pull-left">
-                                                            <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <span class="media-meta pull-right">Febrero 13, 2016</span>
-                                                            <h4 class="title">
-                                                                Lorem Impsum
-                                                                <span class="pull-right pendiente">(Pendiente)</span>
-                                                            </h4>
-                                                            <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr data-status="cancelado">
-                                                <td>
-                                                    <div class="ckbox">
-                                                        <input type="checkbox" id="checkbox2">
-                                                        <label for="checkbox2"></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:;" class="star">
-                                                        <i class="glyphicon glyphicon-star"></i>
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <div class="media">
-                                                        <a href="#" class="pull-left">
-                                                            <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <span class="media-meta pull-right">Febrero 13, 2016</span>
-                                                            <h4 class="title">
-                                                                Lorem Impsum
-                                                                <span class="pull-right cancelado">(Cancelado)</span>
-                                                            </h4>
-                                                            <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr data-status="pagado" class="selected">
-                                                <td>
-                                                    <div class="ckbox">
-                                                        <input type="checkbox" id="checkbox4" checked>
-                                                        <label for="checkbox4"></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:;" class="star star-checked">
-                                                        <i class="glyphicon glyphicon-star"></i>
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <div class="media">
-                                                        <a href="#" class="pull-left">
-                                                            <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <span class="media-meta pull-right">Febrero 13, 2016</span>
-                                                            <h4 class="title">
-                                                                Lorem Impsum
-                                                                <span class="pull-right pagado">(Pagado)</span>
-                                                            </h4>
-                                                            <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <tr data-status="pendiente">
-                                                <td>
-                                                    <div class="ckbox">
-                                                        <input type="checkbox" id="checkbox5">
-                                                        <label for="checkbox5"></label>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <a href="javascript:;" class="star">
-                                                        <i class="glyphicon glyphicon-star"></i>
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <div class="media">
-                                                        <a href="#" class="pull-left">
-                                                            <img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">
-                                                        </a>
-                                                        <div class="media-body">
-                                                            <span class="media-meta pull-right">Febrero 13, 2016</span>
-                                                            <h4 class="title">
-                                                                Lorem Impsum
-                                                                <span class="pull-right pendiente">(Pendiente)</span>
-                                                            </h4>
-                                                            <p class="summary">Ut enim ad minim veniam, quis nostrud exercitation...</p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>*@
                                     </tbody>
+
                                 </table>
+                                <div class="confirmBtn">
+                                    <input type="submit"  value="Order" class="btn btn-success"/>
+                                </div>
                             </div>
+                            </form>
                         }
                         else
                         {
@@ -219,10 +116,8 @@
 
                 $(this).toggleClass('selected');
                 $(':checkbox', this).prop('checked', true);
-                alert($(this).find('td:first').html());
-            }
-            else
-            {
+                //alert($(this).find('td:first').html());
+            } else {
                 $(this).toggleClass('selected');
                 $(':checkbox', this).prop('checked', false);
                 alert($(this).find('td:first').html());
@@ -230,8 +125,14 @@
 
         });
 
-        $('.btn-filter').on('click', function () {
-            var $target = $(this).data('target');
+        //var selectBox = document.getElementById("selectBox");
+        //var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+        //alert(selectedValue);
+
+        $('#selectBox').on('change', function () {
+            var selectBox = document.getElementById("selectBox");
+            var $target = selectBox.options[selectBox.selectedIndex].value;;
+            //alert($target);
             if ($target != 'all') {
                 $('.table tr').css('display', 'none');
                 $('.table tr[data-status="' + $target + '"]').fadeIn('slow');
@@ -242,29 +143,28 @@
 
     });
 
-    $("#table tr").click(function () {
-
-        //var selected = $(this).hasClass('selected');
-        //$("#table tr").removeClass('selected');
-
-
-        //if (!selected) {
-        //    if (event.target.type !== 'checkbox') {
-        //        $(':checkbox', this).trigger('click');
-        //    }
-        //    $(this).addClass('selected');
-        //    alert($(this).find('td:first').html());
-        //    //alert($(this).find(".cId").html());
-
-        //}
-        //var selected = $(this).hasClass('selected');
-        //$("#table tr").removeClass('selected');
-
-        //$(':checkbox', this).trigger('click');
-
-        //if (!selected) {
-        //    $(this).addClass('selected');
-        //    alert($(this).find('td:first').html());
-        //}
-    });
 </script>
+<style>
+    .panel .btn-group {
+        margin: 0 10px 30px 55px;
+        width: 100%;
+        display: inline-flex;
+    }
+
+    .panel {
+        width: 825px;
+    }
+
+    .form {
+        text-align: center;
+    }
+    .btn-success {
+        height: 50px;
+        font-size: 18px;
+        width: 180px;
+        margin: 0 0 0 50px;
+    }
+    .confirmBtn {
+        width: 800px;
+    }
+</style>

@@ -1,0 +1,57 @@
+﻿@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@model MakeBigOrderViewModel
+@{
+    ViewData["Title"] = "MakeBigOrder";
+}
+
+<br/>
+<form asp-action="">
+    <div class="form-horizontal">
+        <label class="col-md-2 control-label">Supplier : @Model.SupplierName</label><br/>
+        @*<select class="form-control" name="supplierId">
+            @foreach (var item in Model.SuppliresCompanies)
+            {
+                if (item == Model.SupplierName)
+                {
+                    <option selected value="111"></option>
+                }
+                else
+                {
+                    <option value="@Model.SupplierName"></option>
+
+                }
+            }
+        </select>*@
+        <hr>
+        @foreach (var drug in Model.DrugStatisticses)
+        {
+            <div class="form-horizontal">
+                <label class="col-md-2 control-label">Drug</label>
+                <input value="@drug.DrugName" class="form-control"/>
+            </div>
+            <br/>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Quanyity</label>
+                <div class="col-md-10">
+                    <input value="@drug.Recomended" type="number" name="quantity" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label">Price $</label>
+                <div class="col-md-10">
+                    <input value="@drug.DrugPrice" type="number" step="0.01" name="price" class="form-control"/>
+                </div>
+            </div>
+            <hr>
+        }
+
+        <input class="btn btn-default" value="Add drug"/>
+        <input type="submit" class="btn btn-default" value="Next"/>
+
+    </div>
+</form>
+<a asp-action="Calculation">Back </a>
+
+
+
+
