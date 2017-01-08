@@ -20,25 +20,32 @@
         <th>
             Quanntity of supplies
         </th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Supplier.CompanyName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Supplier.Country)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Quanntity)
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new {/* id=item.PrimaryKey */})
-        </td>
-    </tr>
-}
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Supplier.CompanyName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Supplier.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quanntity)
+            </td>
+           
+        </tr>
+    }
     </tbody>
 </table>
+<style>
+    th {
+        text-align: center;
+    }
+
+    h1, h2, h3, p, tr, td {
+        color: white;
+    }
+</style>
+

@@ -1,0 +1,62 @@
+﻿@model IEnumerable<HerbalDrugstore.Models.DrugStatistics>
+
+@{
+    ViewData["Title"] = "Drugs orders statistic";
+}
+
+
+<h2>Drugs orders chart</h2>
+
+@if (Model != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Drug name
+                </th>
+                <th>
+                    Supplier
+                </th>
+                <th>
+                    Quanntity of units in orders
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DrugName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SupplierName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UnitsPerDay)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h1>There is nothing to show yet!</h1>
+}
+
+<style>
+    h1 {
+        padding: 20px;
+        text-align: center;
+    }
+    th {
+        text-align: center;
+    }
+
+    h1, h2, h3, p, tr, td {
+        color: white;
+    }
+</style>
+

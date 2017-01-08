@@ -12,5 +12,7 @@ namespace HerbalDrugstore.Models
         public string SupplierName { get; set; }
 
         public List<string> SuppliresCompanies { get; set; }
+
+        public int Price { get; set; }
     }
 }

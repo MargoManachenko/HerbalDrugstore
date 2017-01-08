@@ -3,55 +3,53 @@
 @{
     ViewData["Title"] = "MakeBigOrder";
 }
-
-<br/>
-<form asp-action="">
+<br />
+<div class="cont">
+<form asp-action="SubmitOrder">
     <div class="form-horizontal">
-        <label class="col-md-2 control-label">Supplier : @Model.SupplierName</label><br/>
-        @*<select class="form-control" name="supplierId">
-            @foreach (var item in Model.SuppliresCompanies)
-            {
-                if (item == Model.SupplierName)
-                {
-                    <option selected value="111"></option>
-                }
-                else
-                {
-                    <option value="@Model.SupplierName"></option>
+        <h2>Supplier : @Model.SupplierName</h2><br />
+        <input type="hidden" name="supplier" value="@Model.SupplierName" />
 
-                }
-            }
-        </select>*@
-        <hr>
         @foreach (var drug in Model.DrugStatisticses)
         {
             <div class="form-horizontal">
                 <label class="col-md-2 control-label">Drug</label>
-                <input value="@drug.DrugName" class="form-control"/>
+                <input value="@drug.DrugName" name="drug" class="form-control" style="width: 200px; margin-left: 75px;"  />
             </div>
-            <br/>
+            <br />
             <div class="form-group">
                 <label class="col-md-2 control-label">Quanyity</label>
                 <div class="col-md-10">
-                    <input value="@drug.Recomended" type="number" name="quantity" class="form-control"/>
+                    <input value="@drug.Recomended" type="number" name="quantity" class="form-control" />
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-md-2 control-label">Price $</label>
                 <div class="col-md-10">
-                    <input value="@drug.DrugPrice" type="number" step="0.01" name="price" class="form-control"/>
+                    <input value="@drug.DrugPrice" type="number" name="price" class="form-control" readonly />
                 </div>
             </div>
-            <hr>
         }
-
-        <input class="btn btn-default" value="Add drug"/>
-        <input type="submit" class="btn btn-default" value="Next"/>
-
+        <div style="margin-left: 50px;">
+            <input type="submit" class="btn btn-success" value="Submit" style="width: 100%;" />
+        </div>
     </div>
 </form>
-<a asp-action="Calculation">Back </a>
+<br />
+<div style="margin-left: 170px;">
+    <a asp-action="Calculation">Back </a>
+</div>
+</div>
+<style>
+    input, select {
+        margin-left: 30px;
+    }
 
+    h1, p, h2, h3, h4, label {
+        color: white;
+    }
 
-
-
+    .cont {
+        margin-left: 450px;
+    }
+</style>

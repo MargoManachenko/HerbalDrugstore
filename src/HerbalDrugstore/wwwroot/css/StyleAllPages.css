@@ -1,0 +1,81 @@
+﻿<style>
+    .navbar-default .navbar-nav > li > a; {
+        color: #ffffff;
+    }
+    
+    .navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+        color: #555;
+        background-color: rgba(155, 201, 255,1);
+    }
+
+    a:hover {
+        color: black;
+    }
+
+    .table-info {
+        background: rgba(229, 255, 255, 0.2);
+    }
+
+    .navbar-form .input-group > .form-control {
+        width: 100%;
+        background: rgba(229, 255, 255, 0.7);
+    }
+
+    .input-group .form-control:last-child, .input-group-addon:last-child, .input-group-btn:last-child > .btn, .input-group-btn:last-child > .btn-group > .btn, .input-group-btn:last-child > .dropdown-toggle, .input-group-btn:first-child > .btn:not(:first-child), .input-group-btn:first-child > .btn-group:not(:first-child) > .btn {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        height: 34px;
+        background: rgba(229, 255, 255, 0.7);
+    }
+
+    table {
+        margin-top: 20px;
+        border: white;
+        border: 1px #DDD solid;
+    }
+
+    h1, h2, p {
+        tcolor: white;
+    }
+
+    body {
+        color: white;
+        background: url(https://pp.vk.me/c836327/v836327742/17908/waDikG93KUE.jpg);
+        background-repeat: repeat;
+        background-size: 100%;
+    }
+
+    .row {
+        max-height: 40px;
+    }
+
+    .form-horizontal {
+        max-width: 250px;
+    }
+
+    .dropdown.dropdown-lg .dropdown-menu {
+        min-width: 360px;
+    }
+
+
+    h2 {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .cont {
+        margin: auto;
+        width: 970px;
+    }
+
+    td, th {
+        border: 1px #DDD solid;
+        padding: 5px;
+        height: 40px;
+    }
+
+
+    .navbar-default {
+        background-color: rgba(255, 255,255, 0.2);
+        border-color: #e7e7e7;
+    }

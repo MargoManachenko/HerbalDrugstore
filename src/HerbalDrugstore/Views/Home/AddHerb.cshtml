@@ -1,5 +1,4 @@
 @model HerbalDrugstore.Models.Herb
-
 @{
     ViewData["Title"] = "AddHerb";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,64 +11,81 @@
     <script src="/JavaScript-autoComplete-master/auto-complete.min.js"></script>
 </head>
 
+<div class="cont">
+    <h2>Add new herb </h2>
+    <form asp-action="AddHerb">
+        <div class="form-horizontal">
 
-<h2>Add Herb</h2>
-
-<form asp-action="AddHerb">
-    <div class="form-horizontal">
-        <h4>Herb</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="Name" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Name" class="form-control" autocomplete="off" />
-                <span asp-validation-for="Name" class="text-danger" />
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Name" class="form-control" autocomplete="off" />
+                    <span asp-validation-for="Name" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Species" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Species" id="hero-demo" name="q" class="form-control" />
+                    <span asp-validation-for="Species" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-success" style="width: 100%" />
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Species" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Species" id="hero-demo" name="q" class="form-control" />
-                <span asp-validation-for="Species" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Description" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <textarea asp-for="Description" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
-</form>
+    </form>
 
-
-<div>
+<div style="text-align: center;">
     <a asp-action="HerbsList">Back to List</a>
 </div>
-<script>
+    </div>
+    <script>
         var demo1 = new autoComplete({
             selector: '#hero-demo',
             minChars: 1,
-            source: function(term, suggest){
+            source: function (term, suggest) {
                 term = term.toLowerCase();
                 var choices = ['Archaeopteridaceae', 'Cordaitaceae', 'Cycadaceae', 'Drepanophycaceae', 'Ephedraceae', 'Ginkgoaceae', 'Gnetaceae', 'Hookeriaceae', 'Huperziaceae', 'Lycopodiaceae', 'Stangeriaceae', 'Welwitschiaceae', 'Zamiaceae'];
                 var suggestions = [];
-                for (i=0;i<choices.length;i++)
+                for (i = 0; i < choices.length; i++)
                     if (~choices[i].toLowerCase().indexOf(term)) suggestions.push(choices[i]);
                 suggest(suggestions);
             }
         });
 
-</script>
+    </script>
+    <!--section Scripts {
+        {await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }-->
+    <style>
+        h2 {
+            padding: 30px;
+            text-align: center;
+        }
 
-<!--section Scripts {
-    {await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}-->
+        form {
+            margin: auto;
+            margin-left: 300px;
+        }
 
+        .cont {
+            margin-left: 120px;
+        }
+             h1, p, h2, h3, h4, label {
+         color: white;
+     }
+             input, textarea {
+                 margin-left: 45px;
+             }
+    </style>

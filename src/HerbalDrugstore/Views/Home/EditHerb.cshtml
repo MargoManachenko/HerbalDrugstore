@@ -1,51 +1,90 @@
 @model HerbalDrugstore.Models.Herb
-
 @{
     ViewData["Title"] = "EditHerb";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>EditHerb</h2>
-
-<form asp-action="ApplyEditingHerb">
-    <div class="form-horizontal">
-        <h4>Herb</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="HerbId" />
-        <div class="form-group">
-            <label asp-for="Name" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Name" class="form-control"/>
-                <span asp-validation-for="Name" class="text-danger" />
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js" async defer></script>
+    <link rel="stylesheet" href="/JavaScript-autoComplete-master/auto-complete.css">
+    <script src="/JavaScript-autoComplete-master/auto-complete.min.js"></script>
+</head>
+<h2>Edit herb</h2>
+<br />
+<div class="cont">
+    <form asp-action="ApplyEditingHerb">
+        <div class="form-horizontal">
+            
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="HerbId" />
+            <div class="form-group">
+                <label asp-for="Name" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Species" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Species" id="hero-demo" class="form-control" />
+                    <span asp-validation-for="Species" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Save" class="btn btn-success" />
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Species" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Species" class="form-control"/>
-                <span asp-validation-for="Species" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Description" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
+    </form>
+    <div>
+        <a asp-action="HerbsList">Back to List</a>
     </div>
-</form>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
+<script>
+        var demo1 = new autoComplete({
+            selector: '#hero-demo',
+            minChars: 1,
+            source: function (term, suggest) {
+                term = term.toLowerCase();
+                var choices = ['Archaeopteridaceae', 'Cordaitaceae', 'Cycadaceae', 'Drepanophycaceae', 'Ephedraceae', 'Ginkgoaceae', 'Gnetaceae', 'Hookeriaceae', 'Huperziaceae', 'Lycopodiaceae', 'Stangeriaceae', 'Welwitschiaceae', 'Zamiaceae'];
+                var suggestions = [];
+                for (i = 0; i < choices.length; i++)
+                    if (~choices[i].toLowerCase().indexOf(term)) suggestions.push(choices[i]);
+                suggest(suggestions);
+            }
+        });
 
+</script>
+<style>
+    h1, h2, p, label {
+        color: white;
+    }
+
+    .form-horizontal .control-label {
+        padding-top: 7px;
+        margin-bottom: 0;
+        text-align: right;
+        margin-right: 60px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .cont {
+        margin-left: 470px;
+    }
+</style>
 <!--section Scripts {
     {await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }-->

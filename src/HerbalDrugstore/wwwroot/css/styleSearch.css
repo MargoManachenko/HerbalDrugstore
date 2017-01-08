@@ -61,7 +61,24 @@
             min-width: 560px;
         }
 
-    .row {
-        margin-bottom: 15px;
+   #kostil { float: left;}
+
+   .row {
+        max-height: 40px;
     }
-    #kostil { float: left;}
+
+    .form-horizontal {
+        max-width: 250px;
+    }
+
+    .dropdown.dropdown-lg .dropdown-menu {
+        min-width: 360px;
+    }
+
+    #btnStyle1 {
+        width: 57px;
+        margin-left: 15px;
+    }
+    #btnStyle2 {
+        margin-left: 15px;
+    }

@@ -1,5 +1,4 @@
 @model HerbalDrugstore.Models.DrugAndHerbViewModel
-
 @{
     ViewData["Title"] = "AddDrug";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -18,11 +17,12 @@
 
             var index = $("#space").children("tr").length;
             var indexCell = "<input name='Baggage.Index'  type='hidden' value='" + index + "' />";
+            var lbl = "<label class='col-md-2 control-label lblMy' id='lblstyle'>Name</label>";
             var typeCell = "<input class='styleOfInput' id='Type" + index + "' name='TBoxes' type='text' value='' />";
             var removeCell = "<a id='btnAddBag'  class='glyphicon glyphicon-trash' type='button' onclick='removeRow(" + index + ");' />";
 
             var newRow = "<div class='form-group'><div class='col-md-10'>" +
-                "<div id='herb" + index + "' >" + indexCell + typeCell + removeCell +
+                "<div id='herb" + index + "' >" + indexCell + lbl + typeCell + removeCell +
                 "</div></div></div>";
 
             $("#space").append(newRow);
@@ -35,94 +35,121 @@
 
     </script>
 
-
 </head>
-
-<h2>AddDrug</h2>
-
-<form asp-action="AddDrug">
-    <div class="form-horizontal">
-        <h4>DrugAndHerbViewModel</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="Drug.Name" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Drug.Name" class="form-control" />
-                <span asp-validation-for="Drug.Name" class="text-danger" />
+<div id="cont">
+    <h2>Add new drug</h2>
+    <form asp-action="AddDrug">
+        <div class="form-horizontal">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Drug.Name" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Drug.Name" class="form-control stl" />
+                    <span asp-validation-for="Drug.Name" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Drug.Indications" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <textarea  asp-for="Drug.Indications" rows="3" class="form-control stl"></textarea>
+                    <span asp-validation-for="Drug.Indications" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Drug.Instruction" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <textarea asp-for="Drug.Instruction" rows="3" class="form-control stl"></textarea>
+                    <span asp-validation-for="Drug.Instruction" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Drug.Quantity" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Drug.Quantity" type="number" class="form-control stl" />
+                    <span asp-validation-for="Drug.Quantity" class="text-danger" />
+                </div>
+            </div>
+            @*<div class="form-group">
+                <label class="col-md-2 control-label">Herbs</label>
+                <div class="col-md-10">
+                    <input type="text" id="hero-demo" name="TBoxes" class="form-control" />
+                </div>
+            </div>*@
+            <div class="form-group">
+                <div  >
+                    <button id="btnAddBag" type="button" style="margin-left: 117px; width: 280px;"
+                            onclick="addRow();" class="btn btn-default">
+                        Add herb
+                    </button>
+                    <div id="space"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10" >
+                    <input type="submit" value="Create" class="btn btn-success" style="width: 100%; margin-left:40px"/>
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Drug.Indications" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Drug.Indications" class="form-control" />
-                <span asp-validation-for="Drug.Indications" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Drug.Instruction" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Drug.Instruction" class="form-control" />
-                <span asp-validation-for="Drug.Instruction" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Drug.Quantity" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Drug.Quantity" class="form-control" />
-                <span asp-validation-for="Drug.Quantity" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-md-2 control-label">Herbs</label>
-            <div class="col-md-10">
-                <input type="text" id="hero-demo" name="TBoxes" class="form-control" />
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-10">
-                <label class="col-md-2 control-label"></label>
-                <button id="btnAddBag" type="button"
-                        onclick="addRow();" class="btn btn-default">+</button>
-                <div id="space"></div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
+    </form>
+    <div style="text-align: center;">
+        <a asp-action="DrugsList">Back to List</a>
     </div>
-</form>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
-
 <script>
-        var demo1 = new autoComplete({
-            selector: '#hero-demo',
-            minChars: 1,
-            source: function(term, suggest){
-                term = term.toLowerCase();
-                var choices = ['Archaeopteridaceae', 'Cordaitaceae', 'Cycadaceae', 'Drepanophycaceae', 'Ephedraceae', 'Ginkgoaceae', 'Gnetaceae', 'Hookeriaceae', 'Huperziaceae', 'Lycopodiaceae', 'Stangeriaceae', 'Welwitschiaceae', 'Zamiaceae'];
-                var suggestions = [];
-                for (i=0;i<choices.length;i++)
-                    if (~choices[i].toLowerCase().indexOf(term)) suggestions.push(choices[i]);
-                suggest(suggestions);
-            }
-        });
+    var demo1 = new autoComplete({
+        selector: '#hero-demo',
+        minChars: 1,
+        source: function (term, suggest) {
+            term = term.toLowerCase();
+            var choices = ['Archaeopteridaceae', 'Cordaitaceae', 'Cycadaceae', 'Drepanophycaceae', 'Ephedraceae', 'Ginkgoaceae', 'Gnetaceae', 'Hookeriaceae', 'Huperziaceae', 'Lycopodiaceae', 'Stangeriaceae', 'Welwitschiaceae', 'Zamiaceae'];
+            var suggestions = [];
+            for (i = 0; i < choices.length; i++)
+                if (~choices[i].toLowerCase().indexOf(term)) suggestions.push(choices[i]);
+            suggest(suggestions);
+        }
+    });
 
 </script>
-
 <style>
+    
+    input, textarea {
+        width: 300px;
+    }
+
+    .lblMy {
+        margin-left: -131px;
+    }
+     .stl, btn {
+         margin-left: 40px;
+     }
+    h1, p, h2, h3, h4, label {
+        color: white;
+    }
+    .glyphicon {
+        margin-left: -100px;
+    }
+    h2 {
+        padding: 30px;
+        text-align: center;
+    }
+    form {
+        margin: auto;
+        margin-left: 341px;
+    }
+    .cont {
+        margin-left: 0px;
+        width: 500px;
+    }
+    .form-horizontal {
+     max-width: 350px; 
+}
+
+
     #space {
-        margin: 10px;
+        width: 360px;
         padding: 10px;
-        margin-left: 250px;
-        transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+        margin-left: 156px;
+        transition: border-color cubic-bezier(0.42, 0, 0.27, 0.66) .15s, box-shadow ease-in-out .15s;
     }
 
     .styleOfInput {
@@ -140,7 +167,9 @@
         box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
         transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
         max-width: 280px;
-        margin-left: -65px;
+        margin-bottom: 1px;
+    margin-left: -48px;
+    margin-top: 7px;
     }
-</style>
 
+</style>

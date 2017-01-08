@@ -23,7 +23,6 @@ namespace HerbalDrugstore.Controllers
         }
 
 
-
         [HttpGet]
         public IActionResult AddHerb()
         {
@@ -49,11 +48,10 @@ namespace HerbalDrugstore.Controllers
 
         public IActionResult ApplyEditingHerb(Herb herb)
         {
-            if (ModelState.IsValid)
-            {
+            
                 _db.Herb.Update(herb);
                 _db.SaveChanges();
-            }
+            
             return RedirectToAction("HerbsList", "Home");
         }
 
@@ -65,14 +63,128 @@ namespace HerbalDrugstore.Controllers
             return RedirectToAction("HerbsList", "Home");
         }
 
-        public IActionResult DrugsList()
-        {
-            return View(_db.Drug.ToList());
-        }
+
 
         public IActionResult AddDrug()
         {
             return View();
+        }
+        public IActionResult SearchDrug(string nameToSearch)
+        {
+            if (!string.IsNullOrEmpty(nameToSearch))
+            {
+                var ids = new List<int>();
+                foreach (var drug in _db.Drug)
+                {
+                    if (drug.Name.ToLower().Contains(nameToSearch.ToLower().Trim()))
+                    {
+                        ids.Add(drug.DrugId);
+                    }
+                }
+
+                if (ids.Count == 0)
+                {
+                    ViewBag.Message = "No matches for ' " + nameToSearch + " '";
+                    return RedirectToAction("DrugsList", "Home", new { notFoundMessage = ViewBag.Message });
+                }
+
+                return RedirectToAction("DrugsList", "Home", new { notFoundMessage = "", foundIds = ids, searchString = nameToSearch });
+            }
+            return RedirectToAction("DrugsList", "Home");
+        }
+
+        public IActionResult DrugsList(string notFoundMessage, List<int> foundIds, string commandSort, string command, string searchString)
+        {
+            if (commandSort == "sortedByNameAsc")
+            {
+                var sortedByNameAsc = _db.Drug.OrderBy(d => d.Name).ToList();
+                ViewBag.Message = "Drugs ordered ascending by name";
+                return View(sortedByNameAsc);
+            }
+            if (commandSort == "sortedByQuantityAsc")
+            {
+
+                var sortedByQuantityAsc = _db.Drug.OrderBy(d => d.Quantity).ToList();
+                ViewBag.Message = "Drugs ordered ascending by quantity";
+                return View(sortedByQuantityAsc);
+            }
+            if (commandSort == "sortedByNameDesc")
+            {
+                var sortedByNameDesc = _db.Drug.OrderByDescending(d => d.Name).ToList();
+                ViewBag.Message = "Drugs ordered descending by name";
+                return View(sortedByNameDesc);
+            }
+            if (commandSort == "sortedByQuantityDesc")
+            {
+                var sortedByQuantityDesc = _db.Drug.OrderByDescending(d => d.Quantity).ToList();
+                ViewBag.Message = "Drugs ordered descending by quantity";
+                return View(sortedByQuantityDesc);
+            }
+
+            if (commandSort == "filteredAvailable")
+            {
+                var filteredAvailable = _db.Drug.Where(d => d.Quantity > 0).ToList();
+                ViewBag.Message = "Drugs available in storage";
+                return View(filteredAvailable);
+            }
+            if (commandSort == "filteredNotAvailable")
+            {
+                var filteredNotAvailable = _db.Drug.Where(d => d.Quantity == 0).ToList();
+                ViewBag.Message = "Drugs not available in storage";
+                return View(filteredNotAvailable);
+            }
+
+            ViewBag.NotForundMessage = notFoundMessage;
+
+            if (foundIds.Count != 0)
+            {
+                ViewBag.SearchString = searchString;
+                ViewBag.FoundIds = foundIds;
+            }
+
+           
+            return View(_db.Drug.ToList());
+
+        }
+
+        public IActionResult FilterDrugs(int value, int value2, string command)
+        {
+            if (command.Equals("Sort"))
+            {
+                if (value == 1)
+                {
+                    return RedirectToAction("DrugsList", "Home", new { commandSort = "sortedByNameAsc" });
+                }
+                if (value == 2)
+                {
+                    return RedirectToAction("DrugsList", "Home", new { commandSort = "sortedByNameDesc" });
+                }
+                if (value == 3)
+                {
+                    return RedirectToAction("DrugsList", "Home", new { commandSort = "sortedByQuantityAsc" });
+                }
+                if (value == 4)
+                {
+                    return RedirectToAction("DrugsList", "Home", new { commandSort = "sortedByQuantityDesc" });
+                }
+                return RedirectToAction("DrugsList", "Home");
+            }
+
+            if (command.Equals("Filter"))
+            {
+                if (value2 == 1)
+                {
+                    return RedirectToAction("DrugsList", "Home", new { commandSort = "filteredAvailable" });
+                }
+                if (value2 == 2)
+                {
+                    return RedirectToAction("DrugsList", "Home", new { commandSort = "filteredNotAvailable" });
+                }
+
+                return RedirectToAction("DrugsList", "Home");
+            }
+
+            return RedirectToAction("DrugsList", "Home");
         }
 
         public IActionResult SearchHerb(string nameToSearch)
@@ -96,16 +208,14 @@ namespace HerbalDrugstore.Controllers
                     return RedirectToAction("HerbsList", "Home", new { notFoundMessage = ViewBag.Message });
                 }
 
-                ViewBag.FoundIds = ids;
-                ViewBag.SearchString = nameToSearch;
-
-                return RedirectToAction("HerbsList", "Home", new { notFoundMessage = "", foundIds = ViewBag.FoundIds, searchString = ViewBag.SearchString });
+                return RedirectToAction("HerbsList", "Home", new { notFoundMessage = "", foundIds = ids, searchString = nameToSearch });
 
             }
 
             return RedirectToAction("HerbsList", "Home");
         }
-        public IActionResult HerbsList(string notFoundMessage, List<int> foundIds, string commandSort, string command)
+
+        public IActionResult HerbsList(string notFoundMessage, List<int> foundIds, string commandSort, string command, string searchString)
         {
 
             if (commandSort == "sortedByNameAsc")
@@ -124,13 +234,13 @@ namespace HerbalDrugstore.Controllers
             if (commandSort == "sortedByNameDesc")
             {
                 var sortedByNameDesc = _db.Herb.OrderByDescending(h => h.Name).ToList();
-                ViewBag.Message = "Растения упорядочены в алфавитном порядке по убыванию по виду";
+                ViewBag.Message = "Растения упорядочены в алфавитном порядке по убыванию по имени";
                 return View(sortedByNameDesc);
             }
             if (commandSort == "sortedBySpeciesDesc")
             {
                 var sortedBySpeciesDesc = _db.Herb.OrderBy(h => h.Species == "").OrderByDescending(h => h.Species).ToList();
-                ViewBag.Message = "Растения упорядочены в алфавитном порядке по убыванию по имени";
+                ViewBag.Message = "Растения упорядочены в алфавитном порядке по убыванию по виду";
                 return View(sortedBySpeciesDesc);
             }
 
@@ -151,8 +261,10 @@ namespace HerbalDrugstore.Controllers
 
             if (foundIds.Count != 0)
             {
+                ViewBag.SearchString = searchString;
                 ViewBag.FoundIds = foundIds;
             }
+
             return View(_db.Herb.ToList());
         }
 
@@ -424,7 +536,7 @@ namespace HerbalDrugstore.Controllers
         }
 
         //добавляем поставку в бд, передаем список препаратов
-        public IActionResult AddSupplyStep2(int supplierId, bool repeat)
+        public IActionResult AddSupplyStep2(int supplierId, bool repeat, float price)
         {
             var supplier = _db.Supplier.Single(s => s.SupplierId == supplierId);
             var drugs = _db.Drug.ToList();
@@ -440,12 +552,17 @@ namespace HerbalDrugstore.Controllers
 
             var model = new SupplyAndLotViewModel() { Supplier = supplier, Drugs = drugs, Supply = supplyToPass };
 
+            var p = new Random();
+            ViewBag.Price = p.Next(5, 50);
+
+            ViewBag.TotalPrice = price;
+
             return View(model);
         }
 
 
 
-        public IActionResult AddSupplyStep3(int drugId, int quantity, float price, int supplierId, string command)
+        public IActionResult AddSupplyStep3(int drugId, int quantity, float price, int supplierId, string command, string prevPrice)
         {
             var drug = _db.Drug.Single(d => d.DrugId == drugId);
             var supply = _db.Supply.OrderByDescending(s => s.SupplyId).FirstOrDefault();
@@ -483,17 +600,17 @@ namespace HerbalDrugstore.Controllers
 
             if (command.Equals("Finish"))
             {
-                return RedirectToAction("AddSupplyStep4", "Home", new { id = supply.SupplyId });
+                return RedirectToAction("AddSupplyStep4", "Home", new { id = supply.SupplyId, price = price * quantity + Convert.ToInt32(prevPrice) });
             }
 
-            return RedirectToAction("AddSupplyStep2", "Home", new { supplierId = supplier.SupplierId, repeat = true });
+            return RedirectToAction("AddSupplyStep2", "Home", new { supplierId = supplier.SupplierId, repeat = true, price = price * quantity + prevPrice });
         }
 
         [HttpGet]
         public IActionResult AddSupplyStep4(int id, int drugId, int quantity, float price)
         {
             ViewBag.Id = id;
-
+            ViewBag.TotalPrice = price;
             return View();
         }
 
@@ -581,19 +698,6 @@ namespace HerbalDrugstore.Controllers
 
             var supplRes = (from t in a from sup in suppliers where sup.SupplierId == t select sup).ToList();
 
-            //var supplRes = new List<Supplier>();
-
-            //for (int i = 0; i < a.Count; i++)
-            //{
-            //    foreach (var sup in suppliers)
-            //    {
-            //        if (sup.SupplierId == a[i])
-            //        {
-            //            supplRes.Add(sup);
-            //        }
-            //    }
-            //}
-
             var quant = new List<int>();
 
             for (int i = 0; i < supplRes.Count; i++)
@@ -666,6 +770,7 @@ namespace HerbalDrugstore.Controllers
                 if (dates.Count != 0 && quantities.Count != 0)
                 {
                     int totalDays;
+
                     var thisYear = new List<int>();
                     var prevYear = new List<int>();
 
@@ -698,22 +803,18 @@ namespace HerbalDrugstore.Controllers
 
                     var totalQuantities = quantities.Sum();
 
-                    //if (totalQuantities == 0 || totalDays ==0)
-                    //{
-                    //    return View(model);
-                    //}
-
                     var perDay = totalQuantities / totalDays;
 
                     var daysLeft = DateTime.Now.DayOfYear - thisYear.Max() - 7;
                     var daysLeftForinfo = DateTime.Now.DayOfYear - thisYear.Max();
                     var available = drugs[i].Quantity;
 
+                    if (daysLeft < 0) daysLeft *= -1;
                     var needed = perDay * daysLeft;
 
                     var enought = needed <= available;
 
-                    if (!enought || needed < 0)
+                    if (!enought /*|| needed < 0*/)
                     {
                         var days = " for less than 1 day";
 
@@ -745,6 +846,45 @@ namespace HerbalDrugstore.Controllers
             };
 
             return View(model);
+        }
+
+        public IActionResult DrugsOrdersStatistic()
+        {
+            var changes = _db.DrugChanges.Where(c => c.Increasing).Include(c => c.Drug).ToList();
+
+            var list = new List<DrugStatistics>();
+
+            var drugs = _db.Drug.Distinct().ToList();
+
+            foreach (var drug in drugs)
+            {
+                var suppl = "";
+                var sum = 0;
+                var count = 0;
+
+                foreach (var change in changes)
+                {
+                    if (drug.DrugId == change.DrugId)
+                    {
+                        sum += change.Quantity;
+                        count++;
+                        suppl = change.SupplierName;
+                    }
+                }
+
+                var avg = sum / count;
+                var stat = new DrugStatistics() { DrugName = drug.Name, SupplierName = suppl, UnitsPerDay = avg };
+                list.Add(stat);
+            }
+
+            return View(list);
+        }
+
+        public IActionResult DrugsSellingStatistic()
+        {
+            var drugsIds = _db.Drug.Distinct().Select(d => d.DrugId).ToArray();
+
+            return View(MakeDrugStatistic(drugsIds));
         }
 
         public List<DrugStatistics> MakeDrugStatistic(int[] drugsId)
@@ -813,18 +953,20 @@ namespace HerbalDrugstore.Controllers
 
                     var available = d.Quantity;
 
-                    var needed = perDay * daysLeft;
+                    var needed = perDay * daysLeft + 1;
 
                     var supply = _db.Lot.FirstOrDefault(l => l.DrugId == d.DrugId);
-                    var price = supply.Price / supply.Quantity;
 
+                    var r = new Random();
+                    //var price = supply.Price / supply.Quantity;
+                    var price = r.Next(5, 50);
                     drugStatistic.Add(new DrugStatistics()
                     {
                         DrugName = d.Name,
                         SupplierName = supplierName,
                         UnitsPerDay = perDay,
                         Recomended = needed,
-                        DrugPrice = price,
+                        DrugPrice = price
 
                     });
                 }
@@ -837,13 +979,43 @@ namespace HerbalDrugstore.Controllers
             var drugStatistics = MakeDrugStatistic(checkedDrugs);
             var supplier = drugStatistics[0].SupplierName;
             var allSupliers = _db.Supplier.Select(s => s.CompanyName).ToList();
+            var r = new Random();
+
             var model = new MakeBigOrderViewModel()
             {
                 DrugStatisticses = drugStatistics,
                 SuppliresCompanies = allSupliers,
-                SupplierName = supplier
+                SupplierName = supplier,
+                Price = r.Next(50, 500)
             };
             return View(model);
+        }
+
+        public IActionResult SubmitOrder(string[] drug, int[] quantity, int[] price, string supplier)
+        {
+
+            for (int i = 0; i < drug.Length; i++)
+            {
+                var newDrug = _db.Drug.Single(d => d.Name == drug[i]);
+                newDrug.Quantity = quantity[i] * price[i];
+                _db.Update(newDrug);
+
+                var drugchanges = new DrugChanges()
+                {
+                    DrugId = newDrug.DrugId,
+                    Drug = newDrug,
+                    Increasing = true,
+                    Quantity = newDrug.Quantity,
+                    SupplierName = supplier,
+                    Date = DateTime.Now
+                };
+
+                _db.DrugChanges.Add(drugchanges);
+
+                _db.SaveChanges();
+            }
+
+            return View();
         }
 
         //public IActionResult Calculate()

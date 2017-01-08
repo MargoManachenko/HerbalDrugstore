@@ -16,5 +16,6 @@ namespace HerbalDrugstore.Models
         public int Recomended { get; set; }
 
         public string SupplierName { get; set; }
+
     }
 }

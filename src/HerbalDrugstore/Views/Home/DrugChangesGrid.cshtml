@@ -55,10 +55,17 @@
         </td>
 
         <td>
-            <a asp-action="Details" asp-route-id="@item.ChangeId">Details</a> |
             <a asp-action="DeleteDrugChange" asp-route-id="@item.ChangeId">Delete</a>
         </td>
     </tr>
 }
     </tbody>
 </table>
+<style>
+        th {
+        text-align: center;
+    }
+     h1, h2, h3, p,  tr, td {
+         color: white;
+     }
+</style>

@@ -6,8 +6,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-<h2>Drug details</h2>
+<br/>
+<h1>Drug details</h1>
+<br />
 
 <div class="panel panel-info">
     <div class="panel-heading"><h4>@Html.DisplayNameFor(model => model.Drug.Name) : @Html.DisplayFor(model => model.Drug.Name)</h4></div>
@@ -26,25 +27,32 @@
     <div class="panel-body">
         @if (Model.Compound.Count != 0)
         {
-
-            @foreach (var component in Model.Compound)
-                {
-                <dl class="dl-horizontal">
-                    <dt>Herb</dt>
-                    <dd>@component.Herb.Name</dd>
-                    <dt>Quantity</dt>
-                    <dd>@component.Quantity</dd>
+            <dl class="dl-horizontal">
+                <dt>Herbs</dt>
                 </dl>
-            }
-        }
-        else
-        {
-           <p>No herbs in the drug</p>
-        }
-    </div>
+
+                @foreach (var component in Model.Compound)
+                {
+                    <dl class="dl-horizontal">
+                        <dd>@component.Herb.Name</dd>
+                    </dl>
+                }
+                }
+                else
+                {
+                <p>No herbs in the drug</p>
+                }
+</div>
 </div>
 
 <div>
     @Html.ActionLink("Edit", "EditDrug", new { id = Model.Drug.DrugId }) |
     <a asp-action="DrugsList">Back to List</a>
 </div>
+<style>
+    h1 {
+        text-align: center;
+        color: white;
+    }
+     
+</style>

@@ -5,12 +5,73 @@
     ViewData["Title"] = "SuppliesList";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/styleSearch.css">
+    <link rel="stylesheet" type="text/css" href="/css/StyleAllPages.css">
+</head>
 
-<h2>Supplies List </h2>
+
+<h2>Deliveries List </h2>
 
 <p>
-    <a asp-action="AddSupplyStep1" class="btn btn-default">Create New</a>
+    <a asp-action="AddSupplyStep1" class="btn btn-success">Create New</a>
 </p>
+@*FIX*@
+<nav class="navbar navbar-default" role="navigation" style="margin-bottom: 0;">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <div class="col-md-12" style="height: 40px; margin-top: 7px;">
+        <div class="input-group" id="adv-search">
+            <input type="text" class="form-control searchString" placeholder="Search by name" autocomplete="off">
+            <div class="input-group-btn">
+                <div class="btn-group" role="group">
+                    <div class="dropdown dropdown-lg">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></button>
+                        <div class="dropdown-menu dropdown-menu-right" role="menu">
+                            <form asp-action="FilterHerbs" class="form-horizontal" role="form">
+                                <div class="form-group">
+                                    <div>
+                                        <label>Sort by</label>
+                                    </div>
+                                    <select class="form-control" name="value">
+                                        <option value="0" selected="">Default</option>
+                                        <option value="1">Ascending by name</option>
+                                        <option value="2">Ascending by species</option>
+                                        <option value="3">Descending by name</option>
+                                        <option value="4">Descending by species</option>
+                                    </select>
+                                    <input type="submit" name="command" value="Sort" class="btn btn-default" id="btnStyle1">
+                                </div>
+                                <div class="form-group">
+                                    <div>
+                                        <label>Filter by</label>
+                                    </div>
+                                    <select class="form-control" name="value2">
+                                        <option value="0" selected="">Default</option>
+                                        <option value="1">Show only fully filled</option>
+                                        <option value="2">Show only partly filled</option>
+                                    </select>
+                                    <input type="submit" name="command" value="Filter" class="btn btn-default" id="btnStyle2">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary searchBtn" style="margin-bottom: 27px;"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+
+        </div>
+    </div>
+
+</nav>
 <table class="table">
     <thead>
         <tr>
@@ -53,7 +114,6 @@
                 </td>
 
                 <td>
-                    <a asp-action="EditSupply" asp-route-id="@item.SupplyId">Edit</a> |
                     <a asp-action="SupplyDetails" asp-route-id="@item.SupplyId">Details</a> |
                     <a asp-action="DeleteSupply" asp-route-id="@item.SupplyId">Delete</a>
                 </td>
@@ -61,3 +121,39 @@
         }
     </tbody>
 </table>
+<style>
+    th {
+        text-align: center;
+    }
+
+    .row {
+        max-height: 40px;
+    }
+
+    .form-horizontal {
+        max-width: 250px;
+    }
+
+    .dropdown.dropdown-lg .dropdown-menu {
+        min-width: 360px;
+    }
+
+    #btnStyle1 {
+        width: 57px;
+        margin-left: 15px;
+    }
+
+    #btnStyle2 {
+        margin-left: 15px;
+    }
+
+    h2 {
+        padding: 20px;
+        text-align: center;
+    }
+
+    .cont {
+        margin: auto;
+        width: 970px;
+    }
+</style>

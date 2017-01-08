@@ -1,54 +1,63 @@
 @model HerbalDrugstore.Models.Supplier
-
 @{
     ViewData["Title"] = "AddSupplier";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Add Supplier</h2>
-
-<form asp-action="AddSupplier">
-    <div class="form-horizontal">
-        <h4>Supplier</h4>
-        <hr />
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="CompanyName" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="CompanyName" class="form-control" />
-                <span asp-validation-for="CompanyName" class="text-danger" />
+<h2>Add new supplier</h2>
+<br/>
+<div class="cont">
+    <form asp-action="AddSupplier">
+        <div class="form-horizontal">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CompanyName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="CompanyName" class="form-control" />
+                    <span asp-validation-for="CompanyName" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContactName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="ContactName" class="form-control" />
+                    <span asp-validation-for="ContactName" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Country" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Country" class="form-control" />
+                    <span asp-validation-for="Country" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Phone" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger" />
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-success" style="width: 100%" />
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="ContactName" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="ContactName" class="form-control" />
-                <span asp-validation-for="ContactName" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Country" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Country" class="form-control" />
-                <span asp-validation-for="Country" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="Phone" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger" />
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
+    </form>
+    <div style="margin-left: 175px">
+        <a asp-action="SuppliersList">Back to List</a>
     </div>
-</form>
-
-<div>
-    <a asp-action="SuppliersList">Back to List</a>
 </div>
+<style>
+    .cont {
+        margin-left: 420px;
+    }
 
+    h1, p, h2, h3, h4, label {
+        color: white;
+    }
+
+    input, textarea {
+        margin-left: 75px;
+    }
+</style>

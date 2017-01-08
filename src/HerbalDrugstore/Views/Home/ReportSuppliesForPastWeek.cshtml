@@ -6,12 +6,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Supplies for the past week</h2>
+<h1>Supplies for the past week</h1>
 
 <div>
     <hr />
     @if (Model.Supply.Count != 0)
     {
+        <button OnClick="javascript:window.print();" class="btn btn-default" style="margin-bottom: 20px;">Print</button>
+            <br />
         for (var j = 0; j < Model.Supply.Count; j++)
         {
             <div class="panel panel-info">
@@ -79,9 +81,10 @@
     <h4>No supplies in database for the past week</h4>
     }
 
-    <button OnClick="javascript:window.print();" class="btn btn-default">Print</button>
-    <br />
-    <div>
-        <a asp-action="Reports">Back to List</a>
-    </div>
+    
 </div>
+<style>
+    h1 {
+        color: white;
+    }
+</style>
